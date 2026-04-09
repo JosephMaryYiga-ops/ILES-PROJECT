@@ -28,7 +28,7 @@ local_settings.py
 
 # Database files (if using SQLite for testing)
 *.sqlite3
-
+db.sqlite3
 # Media / uploaded documents (student submissions, attachments)
 media/
 
