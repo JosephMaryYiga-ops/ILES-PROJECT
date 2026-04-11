@@ -1,0 +1,64 @@
+# ===============================
+# Python/Django essentials
+# ===============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ===============================
+# Django-specific files
+# ===============================
+# Migrations (track if you want, ignore cache)
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Local settings
+local_settings.py
+
+# Database files (if using SQLite for testing)
+*.sqlite3
+db.sqlite3
+# Media / uploaded documents (student submissions, attachments)
+media/
+
+# ===============================
+# Logs
+# ===============================
+# Your internship system logs
+*.log
+debug.log
+django.log
+logs/
+# ===============================
+# IDE / Editor configs
+# ===============================
+# VS Code
+.vscode/
+# PyCharm / JetBrains
+.idea/
+*.iml
+
+# ===============================
+# OS / Misc
+# ===============================
+# Mac
+.DS_Store
+# Windows
+Thumbs.db
+
+# ===============================
+# Environment / Secrets
+# ===============================
+.env
+.env.local__pycache__/
