@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'accounts',
 ]
 
@@ -139,7 +140,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'backend/logs/debug.log',  # Update path
+            'filename': BASE_DIR / 'logs/debug.log',  # Update path
         },
     },
     'loggers': {
