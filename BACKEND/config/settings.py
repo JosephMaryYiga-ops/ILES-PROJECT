@@ -150,5 +150,5 @@ LOGGING = {
         },
     },
 }
-AUTH_USER_MODEL = 'yourappname.User'
+
 
