@@ -121,9 +121,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-<<<<<<< HEAD
+
 AUTH_USER_MODEL = 'accounts.User'
-=======
+
 
 
 
@@ -150,5 +150,5 @@ LOGGING = {
         },
     },
 }
-AUTH_USER_MODEL = 'yourappname.User'
->>>>>>> 0f21ed2431eecbddcf3560b48d264cea39e1e668
+
+
