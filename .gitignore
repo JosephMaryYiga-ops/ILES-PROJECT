@@ -39,7 +39,7 @@ media/
 *.log
 debug.log
 django.log
-
+logs/
 # ===============================
 # IDE / Editor configs
 # ===============================
