@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import User, InternshipPlacement, WeeklyLog, EvaluationCriteria, Evaluation
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'role')
@@ -24,3 +25,4 @@ class EvaluationCriteriaAdmin(admin.ModelAdmin):
 class EvaluationAdmin(admin.ModelAdmin):
     list_display = ('student', 'criteria', 'score')
     list_filter = ('criteria',)
+
