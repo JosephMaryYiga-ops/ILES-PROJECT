@@ -39,7 +39,7 @@ media/
 *.log
 debug.log
 django.log
-
+logs/
 # ===============================
 # IDE / Editor configs
 # ===============================
@@ -61,4 +61,4 @@ Thumbs.db
 # Environment / Secrets
 # ===============================
 .env
-.env.local
+.env.local__pycache__/
