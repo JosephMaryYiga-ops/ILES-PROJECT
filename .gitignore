@@ -62,3 +62,6 @@ Thumbs.db
 # ===============================
 .env
 .env.local__pycache__/
+frontend/node_modules/
+BACKEND/venv/
+db.sqlite3
