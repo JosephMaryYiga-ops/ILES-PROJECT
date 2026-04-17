@@ -1,19 +1,41 @@
-USER STORIES
-Student User Stories 
-As a student, I want to register and log in so that I can access my academic dashboard.
-As a student, I want to submit an academic assessment so that it can be reviewed and resolved.
-As a student, I want to create my personal account in the system using my own credentials.
-As a student, I want to track the status of my submitted assignments so that I know my progress.
-As a student, I want to receive notifications about my academic progress so that I stay updated.
-Administrator User Stories 
-As an administrator, I want to view all students and other users so that I can monitor system activity.
-As an administrator, I want to assign tasks to academic supervisors so that they can be handled efficiently.
-As an administrator, I want to manage user roles and permissions so that access is controlled properly.
-Academic Supervisor User Stories 
-As an academic supervisor, I want to view students assigned to me so that I can take appropriate action.
-As an academic supervisor, I want to update the status of students so that other users are informed.
-As an academic supervisor, I want to add comments or feedback so that resolutions are documented.
-Workplace Supervisor User Stories 
-As a workplace supervisor, I want to view student’s assessments forwarded to me so that I can handle them.
-As a workplace supervisor, I want to know how many students are in the system .
-As a workplace supervisor, I want to provide updates on issue progress so that stakeholders are informed.
+Internship Logging & Evaluation System User stories 
+
+
+Student User Stories
+1. As a student, I want to log my daily or weekly tasks, so that I can track my work progress.
+2. As a student, I want to attach supporting documents or files to my task entries, so that my
+workplace supervisor can verify my work.
+3. As a student, I want to view my task history, so that I can reflect on my performance over time.
+4. As a student, I want to receive feedback from my workplace and academic supervisors on
+submitted tasks, so that I can improve my skills.
+5. As a student, I want to receive notifications for pending evaluations or deadlines, so that I don't
+miss important submissions.
+
+Workplace Supervisor User Stories
+1. As a workplace supervisor, I want to view all student logs, so that I can monitor progress.
+2. As a workplace supervisor, I want to provide comments or feedback on individual tasks, so that
+students receive guidance.
+3. As a workplace supervisor, I want to evaluate students periodically using scores or ratings, so that
+I can document performance.
+4. As a workplace supervisor, I want to generate reports on student performance for the academic
+supervisor, so that evaluations are coordinated.
+
+Academic Supervisor User Stories
+1. As an academic supervisor, I want to review student logs and workplace evaluations, so that I can
+assess academic learning outcomes.
+2. As an academic supervisor, I want to provide feedback on student performance, so that they
+improve academically.
+3. As an academic supervisor, I want to generate academic evaluation reports, so that grades and
+assessments can be recorded.
+
+Administrator User Stories
+1. As an administrator, I want to create and manage student, workplace supervisor, and academic
+supervisor accounts, so that all users can access the system.
+2. As an administrator, I want to assign supervisors to students, so that each student has proper
+mentorship.
+3. As an administrator, I want to generate overall system reports, so that internship and academic
+trends are analyzed.
+4. As an administrator, I want to set evaluation periods and deadlines, so that students and
+supervisors stay aligned with schedules.
+
+
