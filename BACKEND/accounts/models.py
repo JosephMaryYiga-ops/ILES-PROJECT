@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 
@@ -24,18 +25,37 @@ class InternshipPlacement(models.Model):
 
     
 class WeeklyLog(models.Model):
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
         ('reviewed', 'Reviewed'),
         ('approved', 'Approved'),
-    )
+    ]
 
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    week_number = models.IntegerField()
-    content = models.TextField()
+    student = models.ForeignKey(User, on_delete=models.CASCADE,limit_choices_to={'role':'student'})
+    week_number = models.IntegerField(help_text='The week number')
+    content = models.TextField(help_text='Detailed description')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     supervisor_comment = models.TextField(blank=True, null=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering=['-week_number','-created_at']
+    def clean(self):
+        if self.week_number<1:
+            raise ValidationError({'week_number':'Must be atleast 1'})
+            
+    def submit(self):
+        self.status='submitted'
+        self.save()
+        
+    def reviewed(self):
+       self.status='reviewed'
+       self.save()
+       
+       
+    def _str_(self):
+        return f"Week{role} :{self.week_number}"
 
 
 class EvaluationCriteria(models.Model):
