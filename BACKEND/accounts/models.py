@@ -49,6 +49,51 @@ class Evaluation(models.Model):
     score = models.FloatField()
 
 
+class Notification(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        help_text="The user who receives this notification"
+    )
+    
+    
+    message = models.TextField(
+        help_text="The notification message content"
+    )
+    
+    
+    is_read = models.BooleanField(
+        default=False,
+        help_text="Has the user viewed this notification?"
+    )
+    
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="When this notification was sent"
+    )
+    
+    
+    def __str__(self):
+        preview = self.message[:30] + "..." if len(self.message) > 30 else self.message
+        return f"To: {self.user.username} | {preview}"
+    
+    # --- HELPER METHODS ---
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+    
+    def mark_as_unread(self):
+        self.is_read = False
+        self.save()
+    
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Notification"
+        verbose_name_plural = "Notifications"
+
 
 
 
