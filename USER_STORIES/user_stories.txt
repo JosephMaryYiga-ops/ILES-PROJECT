@@ -1,0 +1,19 @@
+USER STORIES
+Student User Stories 
+As a student, I want to register and log in so that I can access my academic dashboard.
+As a student, I want to submit an academic assessment so that it can be reviewed and resolved.
+As a student, I want to create my personal account in the system using my own credentials.
+As a student, I want to track the status of my submitted assignments so that I know my progress.
+As a student, I want to receive notifications about my academic progress so that I stay updated.
+Administrator User Stories 
+As an administrator, I want to view all students and other users so that I can monitor system activity.
+As an administrator, I want to assign tasks to academic supervisors so that they can be handled efficiently.
+As an administrator, I want to manage user roles and permissions so that access is controlled properly.
+Academic Supervisor User Stories 
+As an academic supervisor, I want to view students assigned to me so that I can take appropriate action.
+As an academic supervisor, I want to update the status of students so that other users are informed.
+As an academic supervisor, I want to add comments or feedback so that resolutions are documented.
+Workplace Supervisor User Stories 
+As a workplace supervisor, I want to view student’s assessments forwarded to me so that I can handle them.
+As a workplace supervisor, I want to know how many students are in the system .
+As a workplace supervisor, I want to provide updates on issue progress so that stakeholders are informed.
