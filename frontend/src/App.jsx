@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import ReviewLogs from "./pages/ReviewLogs";
 function App() {
   return (
     <BrowserRouter>
@@ -13,6 +13,7 @@ function App() {
         <Route path="/student" element={<StudentDashboard />} />
         <Route path="/supervisor" element={<SupervisorDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/ReviewLogs" element={<ReviewLogs />} /> 
       </Routes>
     </BrowserRouter>
   );
