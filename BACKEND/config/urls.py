@@ -14,9 +14,46 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from accounts.views import (
+    UserViewSet,
+    InternshipPlacementViewSet,
+    WeeklyLogViewSet,
+    SupervisorReviewViewSet,
+    EvaluationCriteriaViewSet,
+    EvaluationViewSet,
+    NotificationViewSet,
+)
+from accounts.auth_views import RegisterView, CustomLoginView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+# ──────────────────────────────────────────
+# ROUTER — auto-generates all CRUD URLs
+# ──────────────────────────────────────────
+router = DefaultRouter()
+router.register(r'users',         UserViewSet,               basename='user')
+router.register(r'placements',    InternshipPlacementViewSet, basename='placement')
+router.register(r'logs',          WeeklyLogViewSet,           basename='log')
+router.register(r'reviews',       SupervisorReviewViewSet,    basename='review')
+router.register(r'criteria',      EvaluationCriteriaViewSet,  basename='criteria')
+router.register(r'evaluations',   EvaluationViewSet,          basename='evaluation')
+router.register(r'notifications', NotificationViewSet,        basename='notification')
 
 urlpatterns = [
+    # Django admin panel
     path('admin/', admin.site.urls),
+
+    # Auth endpoints
+    path('api/auth/register/', RegisterView.as_view(),        name='register'),
+    path('api/auth/login/',    CustomLoginView.as_view(), name='login'),
+    path('api/auth/refresh/',  TokenRefreshView.as_view(),    name='token_refresh'),
+
+    # All other API endpoints via router
+    path('api/', include(router.urls)),
 ]
