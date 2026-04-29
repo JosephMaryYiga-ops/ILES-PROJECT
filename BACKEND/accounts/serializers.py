@@ -63,7 +63,7 @@ class WeeklyLogSerializer(serializers.ModelSerializer):
             'week_number', 'content', 'status', 'status_display',
             'supervisor_comment', 'created_at', 'updated_at',
         ]
-        read_only_fields = ['status', 'created_at', 'updated_at']
+        read_only_fields = ['student','status', 'created_at', 'updated_at']
 
     def validate_week_number(self, value):
         if value < 1:
