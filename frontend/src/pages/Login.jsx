@@ -25,7 +25,7 @@ function Login() {
       localStorage.setItem('username', user.username);
       localStorage.setItem('user_id', user.id);
 
-      // Redirect based on role
+      
       if (user.role === 'student') navigate('/student');
       else if (user.role === 'workplace_supervisor') navigate('/supervisor');
       else if (user.role === 'academic_supervisor') navigate('/supervisor');

@@ -35,7 +35,7 @@ function SubmitLog() {
 
       const logId = createRes.data.id;
 
-      // Step 2: Submit the log
+      
       await api.post(`/logs/${logId}/submit/`);
 
       setSuccess('Log submitted successfully!');
