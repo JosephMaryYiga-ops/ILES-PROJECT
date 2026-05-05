@@ -4,13 +4,13 @@ from rest_framework.response import Response
 
 from .models import (
     User, InternshipPlacement, WeeklyLog,
-    SupervisorReview, EvaluationCriteria, Evaluation, Notification
+    SupervisorReview, EvaluationCriteria, Evaluation, Notification, AuditLog
 )
 from .serializers import (
     UserSerializer, RegisterSerializer,
     InternshipPlacementSerializer, WeeklyLogSerializer,
     SupervisorReviewSerializer, EvaluationCriteriaSerializer,
-    EvaluationSerializer, NotificationSerializer
+    EvaluationSerializer, NotificationSerializer, AuditLogSerializer
 )
 
 
