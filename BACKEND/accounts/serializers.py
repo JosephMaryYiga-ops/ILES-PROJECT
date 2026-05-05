@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, InternshipPlacement, WeeklyLog,
-    SupervisorReview, EvaluationCriteria, Evaluation, Notification
+    SupervisorReview, EvaluationCriteria, Evaluation, Notification, AuditLog
 )
 
 
@@ -142,4 +142,24 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = ['id', 'user', 'message', 'is_read', 'created_at']
-        read_only_fields = ['created_at']
+        read_only_fields = ['id','created_at']
+
+class AuditLogSerializer(serializers.ModelSerializer):
+    actor_username = serializers.CharField(source='actor.username', read_only=True)
+
+    class Meta:
+        model = AuditLog
+        fields = ['id','actor','actor_username','action','created_at']
+        read_only_fields = ['id','created_at']
+
+
+
+
+
+
+
+
+
+
+
+

@@ -194,9 +194,14 @@ class Notification(models.Model):
         verbose_name_plural = "Notifications"
 
 
+class AuditLog(models.Model):
+    actor = models.ForeignKey(User, on_delete=models.SET_NULL, null= True, related_name= 'audit_logs')
+    action = models.CharField(max_length=255)
+    notification = models.ForeignKey('Notification', on_delete=models.SET_NULL, null=True, blank=True, related_name='audit_logs')
+    created_at = models.DateTimeField(auto_now_add=True)
 
-
-
+    class Meta:
+        ordering = ['-created_at']
 
 
 
