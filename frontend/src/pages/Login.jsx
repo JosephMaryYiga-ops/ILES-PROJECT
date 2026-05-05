@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -85,7 +86,7 @@ function Login() {
           </button>
         </form>
 
-        <p style={styles.footer}>CSC 1202 — Internship Management System</p>
+        
       </div>
     </div>
   );
@@ -94,18 +95,24 @@ function Login() {
 const styles = {
   page: {
     minHeight: '100vh',
-    backgroundColor: '#f0f4f8',
+    backgroundImage: 'url(https://i.pinimg.com/736x/d7/c5/76/d7c57656f781d88d20797b5d9ca9cf92.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     padding: '48px 40px',
     borderRadius: '12px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
     width: '100%',
     maxWidth: '420px',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
   },
   header: {
     textAlign: 'center',
