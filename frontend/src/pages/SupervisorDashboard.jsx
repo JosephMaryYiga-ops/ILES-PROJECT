@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import Navbar from '../components/Navbar';
 
 function SupervisorDashboard() {
   const [logs, setLogs] = useState([]);
@@ -9,127 +10,88 @@ function SupervisorDashboard() {
   const username = localStorage.getItem('username');
 
   useEffect(() => {
-    fetchLogs();
+    api.get('/logs/').then(r => setLogs(r.data)).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  const fetchLogs = async () => {
-    try {
-      const response = await api.get('/logs/');
-      setLogs(response.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/');
-  };
-
-  const submittedLogs = logs.filter(l => l.status === 'submitted').length;
-  const reviewedLogs = logs.filter(l => l.status === 'reviewed').length;
-  const approvedLogs = logs.filter(l => l.status === 'approved').length;
+  const pending = logs.filter(l => l.status === 'submitted');
 
   return (
-    <div style={styles.page}>
-      <div style={styles.navbar}>
-        <h2 style={styles.navTitle}>ILES</h2>
-        <div style={styles.navLinks}>
-          <span style={styles.navLinkActive}>Dashboard</span>
-          <span style={styles.navLink} onClick={() => navigate('/supervisor/review')}>Review Logs</span>
-          <span style={styles.navLink} onClick={handleLogout}>Logout</span>
-        </div>
-      </div>
-
-      <div style={styles.container}>
-        {/* Welcome */}
-        <div style={styles.welcomeCard}>
+    <div style={S.page}>
+      <Navbar active="dashboard" />
+      <div style={S.container}>
+        <div style={S.hero}>
           <div>
-            <h1 style={styles.welcomeTitle}>Welcome, {username}! 👋</h1>
-            <p style={styles.welcomeSub}>Review and provide feedback on student weekly logs.</p>
+            <p style={S.heroSub}>Supervisor Dashboard</p>
+            <h1 style={S.heroName}>{username}</h1>
+            <p style={S.heroDesc}>Review and provide feedback on student weekly logs.</p>
+            <button style={S.heroBtn} onClick={() => navigate('/supervisor/review')}>Go to Review Logs</button>
           </div>
-          <button style={styles.reviewBtn} onClick={() => navigate('/supervisor/review')}>
-            Review Logs
-          </button>
-        </div>
-
-        {loading && <p style={styles.loading}>Loading...</p>}
-
-        {/* Stats */}
-        <div style={styles.statsRow}>
-          <div style={styles.statCard}>
-            <h2 style={{ ...styles.statNumber, color: '#1F4E79' }}>{logs.length}</h2>
-            <p style={styles.statLabel}>Total Logs</p>
-          </div>
-          <div style={styles.statCard}>
-            <h2 style={{ ...styles.statNumber, color: '#2196f3' }}>{submittedLogs}</h2>
-            <p style={styles.statLabel}>Waiting for Review</p>
-          </div>
-          <div style={styles.statCard}>
-            <h2 style={{ ...styles.statNumber, color: '#9c27b0' }}>{reviewedLogs}</h2>
-            <p style={styles.statLabel}>Reviewed</p>
-          </div>
-          <div style={styles.statCard}>
-            <h2 style={{ ...styles.statNumber, color: '#4caf50' }}>{approvedLogs}</h2>
-            <p style={styles.statLabel}>Approved</p>
+          <div style={S.heroStat}>
+            <span style={S.heroStatNum}>{pending.length}</span>
+            <span style={S.heroStatLabel}>Pending Reviews</span>
           </div>
         </div>
 
-        {/* Pending Reviews */}
-        <div style={styles.card}>
-          <h3 style={styles.cardTitle}>📋 Logs Waiting for Your Review</h3>
-          {logs.filter(l => l.status === 'submitted').length === 0 ? (
-            <p style={styles.noData}>No logs waiting for review right now.</p>
-          ) : (
-            <div>
-              {logs.filter(l => l.status === 'submitted').slice(0, 5).map(log => (
-                <div key={log.id} style={styles.logItem}>
-                  <div>
-                    <span style={styles.logWeek}>Week {log.week_number}</span>
-                    <span style={styles.studentName}> — {log.student_name}</span>
-                  </div>
-                  <button
-                    style={styles.actionBtn}
-                    onClick={() => navigate('/supervisor/review')}
-                  >
-                    Review
-                  </button>
-                </div>
-              ))}
+        {loading && <p style={S.loading}>Loading...</p>}
+
+        <div style={S.stats}>
+          {[
+            { label: 'Total Logs', val: logs.length, color: '#4A148C', bg: '#F3E5F5' },
+            { label: 'Pending Review', val: pending.length, color: '#1565C0', bg: '#E3F2FD' },
+            { label: 'Reviewed', val: logs.filter(l => l.status === 'reviewed').length, color: '#E65100', bg: '#FBE9E7' },
+            { label: 'Approved', val: logs.filter(l => l.status === 'approved').length, color: '#2E7D32', bg: '#E8F5E9' },
+          ].map((s, i) => (
+            <div key={i} style={{ ...S.statCard, backgroundColor: s.bg }}>
+              <span style={{ ...S.statNum, color: s.color }}>{s.val}</span>
+              <span style={{ ...S.statLabel, color: s.color }}>{s.label}</span>
             </div>
-          )}
+          ))}
+        </div>
+
+        <div style={S.card}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={S.cardTitle}>Logs Waiting for Your Review</h3>
+            <span style={S.link} onClick={() => navigate('/supervisor/review')}>Review all →</span>
+          </div>
+          {pending.length === 0 ? (
+            <p style={S.empty}>No logs waiting for review right now.</p>
+          ) : pending.slice(0, 5).map(log => (
+            <div key={log.id} style={S.logRow}>
+              <span style={S.weekTag}>W{log.week_number}</span>
+              <span style={S.studentName}>{log.student_name}</span>
+              <button style={S.reviewBtn} onClick={() => navigate('/supervisor/review')}>Review</button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-const styles = {
-  page: { minHeight: '100vh', backgroundColor: '#f0f4f8', fontFamily: 'Arial, sans-serif' },
-  navbar: { backgroundColor: '#1F4E79', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' },
-  navTitle: { color: '#fff', margin: 0, fontSize: '22px', fontWeight: 'bold' },
-  navLinks: { display: 'flex', gap: '24px' },
-  navLink: { color: '#a8c8e8', cursor: 'pointer', fontSize: '14px' },
-  navLinkActive: { color: '#ffffff', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', borderBottom: '2px solid #fff', paddingBottom: '4px' },
-  container: { maxWidth: '1000px', margin: '0 auto', padding: '32px 16px' },
-  welcomeCard: { backgroundColor: '#1F4E79', borderRadius: '12px', padding: '32px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  welcomeTitle: { color: '#fff', margin: '0 0 8px 0', fontSize: '24px' },
-  welcomeSub: { color: '#a8c8e8', margin: 0, fontSize: '14px' },
-  reviewBtn: { backgroundColor: '#fff', color: '#1F4E79', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' },
-  loading: { textAlign: 'center', color: '#666' },
-  statsRow: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' },
-  statCard: { backgroundColor: '#fff', borderRadius: '12px', padding: '24px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' },
-  statNumber: { fontSize: '36px', fontWeight: 'bold', margin: '0 0 4px 0' },
-  statLabel: { color: '#888', margin: 0, fontSize: '14px' },
-  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' },
-  cardTitle: { margin: '0 0 16px 0', color: '#1F4E79', fontSize: '16px' },
-  noData: { color: '#999', textAlign: 'center', padding: '20px 0' },
-  logItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' },
-  logWeek: { fontWeight: '600', color: '#333', fontSize: '14px' },
-  studentName: { color: '#666', fontSize: '14px' },
-  actionBtn: { backgroundColor: '#1F4E79', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' },
+const S = {
+  page: { minHeight: '100vh', backgroundColor: '#F5F5F0', fontFamily: 'Arial, sans-serif' },
+  container: { maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' },
+  hero: { background: 'linear-gradient(135deg, #1A1035 0%, #0f1f10 60%, #0D2B2C 100%)', borderRadius: '16px', padding: '40px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' },
+  heroSub: { color: 'rgba(255,255,255,0.5)', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 4px 0' },
+  heroName: { color: '#fff', fontSize: '32px', fontWeight: 'bold', margin: '0 0 8px 0' },
+  heroDesc: { color: 'rgba(255,255,255,0.55)', fontSize: '14px', margin: '0 0 20px 0' },
+  heroBtn: { background: 'linear-gradient(135deg, #4A148C, #006064)', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700' },
+  heroStat: { textAlign: 'center' },
+  heroStatNum: { display: 'block', color: '#fff', fontSize: '48px', fontWeight: 'bold' },
+  heroStatLabel: { color: 'rgba(255,255,255,0.4)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' },
+  loading: { textAlign: 'center', color: '#999' },
+  stats: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' },
+  statCard: { borderRadius: '12px', padding: '24px', textAlign: 'center' },
+  statNum: { display: 'block', fontSize: '36px', fontWeight: 'bold', marginBottom: '4px' },
+  statLabel: { fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' },
+  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
+  cardTitle: { color: '#1A1A1A', fontSize: '15px', fontWeight: '700', margin: 0 },
+  empty: { color: '#bbb', textAlign: 'center', padding: '20px 0', fontSize: '13px' },
+  logRow: { display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #F5F5F5' },
+  weekTag: { backgroundColor: '#1A1035', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '700' },
+  studentName: { color: '#444', fontSize: '14px', flex: 1 },
+  reviewBtn: { backgroundColor: '#4A148C', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: '700' },
+  link: { color: '#4A148C', fontSize: '12px', cursor: 'pointer', fontWeight: '600' },
 };
 
 export default SupervisorDashboard;

@@ -33,12 +33,7 @@ class WeeklyLog(models.Model):
 
     student = models.ForeignKey(User, on_delete=models.CASCADE,limit_choices_to={'role':'student'})
     week_number = models.IntegerField(help_text='The week number')
-    placement = models.ForeignKey(
-    InternshipPlacement,
-    on_delete=models.CASCADE,
-    related_name='weekly_logs',
-    null=True,   # add this
-    blank=True,  # add this
+    placement = models.ForeignKey(InternshipPlacement, on_delete=models.CASCADE, related_name='weekly_logs', null=True, blank=True,  
 )
     content = models.TextField(help_text='Detailed description')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')

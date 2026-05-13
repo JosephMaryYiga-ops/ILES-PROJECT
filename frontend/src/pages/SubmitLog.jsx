@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import Navbar from '../components/Navbar';
 
 function SubmitLog() {
   const [placements, setPlacements] = useState([]);
@@ -13,131 +14,56 @@ function SubmitLog() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/placements/').then(res => {
-      setPlacements(res.data);
-      if (res.data.length > 0) setPlacement(res.data[0].id);
-    });
+    api.get('/placements/').then(r => { setPlacements(r.data); if (r.data.length > 0) setPlacement(r.data[0].id); });
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
+    setLoading(true); setError(''); setSuccess('');
     try {
-      // Step 1: Create the log as draft
-      const createRes = await api.post('/logs/', {
-        placement: placement,
-        week_number: parseInt(weekNumber),
-        content: content,
-      });
-
-      const logId = createRes.data.id;
-
-      // Step 2: Submit the log
-      await api.post(`/logs/${logId}/submit/`);
-
+      const res = await api.post('/logs/', { placement, week_number: parseInt(weekNumber), content });
+      await api.post(`/logs/${res.data.id}/submit/`);
       setSuccess('Log submitted successfully!');
-      setContent('');
-      setWeekNumber('');
-
-      // Redirect to logs page after 2 seconds
+      setContent(''); setWeekNumber('');
       setTimeout(() => navigate('/student/logs'), 2000);
-
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to submit log. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/');
+      setError(err.response?.data?.detail || 'Failed to submit. Please try again.');
+    } finally { setLoading(false); }
   };
 
   return (
-    <div style={styles.page}>
-      {/* Navbar */}
-      <div style={styles.navbar}>
-        <h2 style={styles.navTitle}>ILES</h2>
-        <div style={styles.navLinks}>
-          <span style={styles.navLink} onClick={() => navigate('/student')}>Dashboard</span>
-          <span style={styles.navLink} onClick={() => navigate('/student/logs')}>My Logs</span>
-          <span style={styles.navLinkActive}>Submit Log</span>
-          <span style={styles.navLink} onClick={handleLogout}>Logout</span>
-        </div>
-      </div>
+    <div style={S.page}>
+      <Navbar active="submit" />
+      <div style={S.container}>
+        <h1 style={S.title}>Submit Weekly Log</h1>
+        <p style={{ color: '#666', fontSize: '13px', marginTop: '-10px', marginBottom: '20px' }}>
+           Be honest bossman
+        </p>
 
-      <div style={styles.container}>
-        <h1 style={styles.title}>Submit Weekly Log</h1>
+        {success && <div style={S.success}>{success} Redirecting...</div>}
+        {error && <div style={S.error}>{error}</div>}
 
-        {success && <div style={styles.success}>{success} Redirecting...</div>}
-        {error && <div style={styles.error}>{error}</div>}
-
-        <div style={styles.card}>
+        <div style={S.card}>
           <form onSubmit={handleSubmit}>
-
-            {/* Placement */}
-            <div style={styles.field}>
-              <label style={styles.label}>Internship Placement</label>
-              <select
-                style={styles.input}
-                value={placement}
-                onChange={(e) => setPlacement(e.target.value)}
-                required
-              >
+            <div style={S.field}>
+              <label style={S.label}>Internship Placement</label>
+              <select style={S.input} value={placement} onChange={e => setPlacement(e.target.value)} required>
                 {placements.length === 0 && <option>No placement found</option>}
-                {placements.map(p => (
-                  <option key={p.id} value={p.id}>
-                    {p.company_name}
-                  </option>
-                ))}
+                {placements.map(p => <option key={p.id} value={p.id}>{p.company_name}</option>)}
               </select>
             </div>
-
-            {/* Week Number */}
-            <div style={styles.field}>
-              <label style={styles.label}>Week Number</label>
-              <input
-                style={styles.input}
-                type="number"
-                min="1"
-                placeholder="e.g. 1"
-                value={weekNumber}
-                onChange={(e) => setWeekNumber(e.target.value)}
-                required
-              />
+            <div style={S.field}>
+              <label style={S.label}>Week Number</label>
+              <input style={S.input} type="number" min="1" placeholder="e.g. 1" value={weekNumber} onChange={e => setWeekNumber(e.target.value)} required />
             </div>
-
-            {/* Content */}
-            <div style={styles.field}>
-              <label style={styles.label}>What did you do this week?</label>
-              <textarea
-                style={styles.textarea}
-                placeholder="Describe your tasks, what you learned, challenges you faced..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={8}
-                required
-              />
-              <p style={styles.charCount}>{content.length} characters</p>
+            <div style={S.field}>
+              <label style={S.label}>What did you do this week?</label>
+              <textarea style={S.textarea} rows={8} placeholder="Describe your tasks, what you learned, challenges you faced..." value={content} onChange={e => setContent(e.target.value)} required />
+              <p style={S.count}>{content.length} characters</p>
             </div>
-
-            <div style={styles.buttons}>
-              <button
-                type="button"
-                style={styles.cancelBtn}
-                onClick={() => navigate('/student')}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                style={loading ? { ...styles.submitBtn, opacity: 0.7 } : styles.submitBtn}
-                disabled={loading}
-              >
+            <div style={S.btns}>
+              <button type="button" style={S.cancelBtn} onClick={() => navigate('/student')}>Cancel</button>
+              <button type="submit" style={loading ? { ...S.submitBtn, opacity: 0.7 } : S.submitBtn} disabled={loading}>
                 {loading ? 'Submitting...' : 'Submit Log'}
               </button>
             </div>
@@ -148,26 +74,21 @@ function SubmitLog() {
   );
 }
 
-const styles = {
-  page: { minHeight: '100vh', backgroundColor: '#f0f4f8', fontFamily: 'Arial, sans-serif' },
-  navbar: { backgroundColor: '#1F4E79', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' },
-  navTitle: { color: '#fff', margin: 0, fontSize: '22px', fontWeight: 'bold' },
-  navLinks: { display: 'flex', gap: '24px' },
-  navLink: { color: '#a8c8e8', cursor: 'pointer', fontSize: '14px' },
-  navLinkActive: { color: '#ffffff', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', borderBottom: '2px solid #fff', paddingBottom: '4px' },
-  container: { maxWidth: '700px', margin: '0 auto', padding: '32px 16px' },
-  title: { color: '#1F4E79', marginBottom: '24px' },
-  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '32px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
-  success: { backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #a5d6a7' },
-  error: { backgroundColor: '#ffebee', color: '#c62828', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ef9a9a' },
+const S = {
+  page: { minHeight: '100vh', backgroundColor: '#F5F5F0', fontFamily: 'Arial, sans-serif' },
+  container: { maxWidth: '700px', margin: '0 auto', padding: '32px 24px' },
+  title: { color: '#1A1A1A', marginBottom: '24px', fontSize: '24px', fontWeight: 'bold' },
+  success: { backgroundColor: '#E8F5E9', color: '#2E7D32', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #A5D6A7' },
+  error: { backgroundColor: '#FFF0F0', color: '#C62828', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #FFCDD2' },
+  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '32px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
   field: { marginBottom: '20px' },
-  label: { display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '14px', color: '#333' },
-  input: { width: '100%', padding: '12px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box' },
-  textarea: { width: '100%', padding: '12px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', resize: 'vertical' },
-  charCount: { color: '#999', fontSize: '12px', textAlign: 'right', marginTop: '4px' },
-  buttons: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
-  cancelBtn: { padding: '12px 24px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '14px' },
-  submitBtn: { padding: '12px 24px', backgroundColor: '#1F4E79', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' },
+  label: { display: 'block', fontSize: '11px', fontWeight: '700', color: '#555', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' },
+  input: { width: '100%', padding: '12px 14px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' },
+  textarea: { width: '100%', padding: '12px 14px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' },
+  count: { color: '#bbb', fontSize: '11px', textAlign: 'right', margin: '4px 0 0 0' },
+  btns: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
+  cancelBtn: { padding: '12px 24px', border: '2px solid #E8E8E8', borderRadius: '8px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '14px', color: '#666' },
+  submitBtn: { padding: '12px 24px', background: 'linear-gradient(135deg, #2E7D32, #006064)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700' },
 };
 
 export default SubmitLog;

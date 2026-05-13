@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
-
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,24 +13,18 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
       const response = await api.post('/auth/login/', { username, password });
       const { access, refresh, user } = response.data;
-
-      // Save to localStorage
       localStorage.setItem('access', access);
       localStorage.setItem('refresh', refresh);
       localStorage.setItem('role', user.role);
       localStorage.setItem('username', user.username);
       localStorage.setItem('user_id', user.id);
-
-      // Redirect based on role
       if (user.role === 'student') navigate('/student');
       else if (user.role === 'workplace_supervisor') navigate('/supervisor');
       else if (user.role === 'academic_supervisor') navigate('/supervisor');
       else if (user.role === 'admin') navigate('/admin');
-
     } catch (err) {
       setError('Invalid username or password. Please try again.');
     } finally {
@@ -41,140 +34,102 @@ function Login() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.card}>
-        {/* Logo / Title */}
-        <div style={styles.header}>
-          <h1 style={styles.logo}>ILES</h1>
-          <p style={styles.subtitle}>Internship Log & Evaluation System</p>
+      {/* Left Panel */}
+      <div style={styles.left}>
+        <div style={styles.circle1} />
+        <div style={styles.circle2} />
+        <div style={styles.content}>
+          <div style={styles.logoBox}><span style={styles.logoText}>ILES</span></div>
+          <h1 style={styles.systemName}>Internship &<br />Logging Evaluation<br />System</h1>
+          <p style={styles.tagline}>Manage your internship progress easily</p>
+          <div style={styles.pills}>
+            <span style={{ ...styles.pill, background: '#2E7D32' }}>Students</span>
+            <span style={{ ...styles.pill, background: '#4A148C' }}>Supervisors</span>
+            <span style={{ ...styles.pill, background: '#E65100' }}>Admins</span>
+            <span style={{ ...styles.pill, background: '#006064' }}>Evaluators</span>
+          </div>
         </div>
+        <div style={styles.credit}>
+          <p style={styles.creditText}>Developed by :</p>
+          <p style={styles.creditText}>Joseph Mary Yiga · Nyerere Shantinah · Bagonza Julius</p>
+        </div>
+      </div>
 
-        {/* Error message */}
-        {error && <div style={styles.error}>{error}</div>}
+      {/* Right Panel */}
+      <div style={styles.right}>
+        <div style={styles.formBox}>
+          <div style={styles.accentBar} />
+          <h2 style={styles.formTitle}>Welcome Back</h2>
+          <p style={styles.formSub}>Sign in to access your dashboard</p>
 
-        {/* Form */}
-        <form onSubmit={handleLogin}>
-          <div style={styles.field}>
-            <label style={styles.label}>Username</label>
-            <input
-              style={styles.input}
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+          {error && <div style={styles.error}>{error}</div>}
+
+          <form onSubmit={handleLogin}>
+            <div style={styles.field}>
+              <label style={styles.label}>Username</label>
+              <input style={styles.input} type="text" placeholder="Enter your username" value={username} onChange={e => setUsername(e.target.value)} required />
+            </div>
+            <div style={styles.field}>
+              <label style={styles.label}>Password</label>
+              <input style={styles.input} type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} required />
+            </div>
+            <button type="submit" style={loading ? { ...styles.btn, opacity: 0.7 } : styles.btn} disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign In →'}
+            </button>
+          </form>
+
+          <div style={styles.roles}>
+            <p style={styles.rolesTitle}>Access Levels</p>
+            <div style={styles.roleGrid}>
+              {[
+                { label: 'Student', color: '#2E7D32' },
+                { label: 'Supervisor', color: '#4A148C' },
+                { label: 'Admin', color: '#E65100' },
+                { label: 'Evaluator', color: '#006064'},
+              ].map(r => (
+                <div key={r.label} style={{ ...styles.roleCard, borderTop: `3px solid ${r.color}` }}>
+                  <span style={styles.roleIcon}>{r.icon}</span>
+                  <span style={styles.roleLabel}>{r.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>Password</label>
-            <input
-              style={styles.input}
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            style={loading ? { ...styles.button, opacity: 0.7 } : styles.button}
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        
+        </div>
       </div>
     </div>
   );
 }
 
 const styles = {
-  page: {
-    minHeight: '100vh',
-    backgroundImage: 'url(https://i.pinimg.com/736x/d7/c5/76/d7c57656f781d88d20797b5d9ca9cf92.jpg)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-  },
-  card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    padding: '48px 40px',
-    borderRadius: '12px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-    width: '100%',
-    maxWidth: '420px',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '32px',
-  },
-  logo: {
-    fontSize: '48px',
-    fontWeight: 'bold',
-    color: '#1F4E79',
-    margin: '0 0 8px 0',
-  },
-  subtitle: {
-    color: '#666',
-    fontSize: '14px',
-    margin: 0,
-  },
-  error: {
-    backgroundColor: '#ffebee',
-    color: '#c62828',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    fontSize: '14px',
-    border: '1px solid #ef9a9a',
-  },
-  field: {
-    marginBottom: '20px',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '6px',
-    fontWeight: '600',
-    fontSize: '14px',
-    color: '#333',
-  },
-  input: {
-    width: '100%',
-    padding: '12px 14px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    fontSize: '15px',
-    boxSizing: 'border-box',
-    outline: 'none',
-  },
-  button: {
-    width: '100%',
-    padding: '14px',
-    backgroundColor: '#1F4E79',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginTop: '8px',
-  },
-  footer: {
-    textAlign: 'center',
-    marginTop: '24px',
-    color: '#aaa',
-    fontSize: '12px',
-  }
+  page: { minHeight: '100vh', display: 'flex', fontFamily: 'Arial, sans-serif' },
+  left: { width: '45%', background: 'linear-gradient(135deg, #0f1f10 0%, #1A1035 60%, #0D2B2C 100%)', padding: '48px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' },
+  circle1: { position: 'absolute', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(46,125,50,0.2) 0%, transparent 70%)', top: '-100px', left: '-100px' },
+  circle2: { position: 'absolute', width: '250px', height: '250px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(74,20,140,0.3) 0%, transparent 70%)', bottom: '-50px', right: '-50px' },
+  content: { position: 'relative', zIndex: 2, marginTop: '60px' },
+  logoBox: { display: 'inline-block', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', padding: '4px 16px', marginBottom: '20px' },
+  logoText: { color: '#fff', fontSize: '16px', fontWeight: 'bold', letterSpacing: '4px' },
+  systemName: { color: '#fff', fontSize: '32px', fontWeight: 'bold', lineHeight: 1.3, margin: '0 0 12px 0' },
+  tagline: { color: 'rgba(255,255,255,0.4)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 28px 0' },
+  pills: { display: 'flex', flexWrap: 'wrap', gap: '8px' },
+  pill: { color: '#fff', padding: '5px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' },
+  credit: { position: 'relative', zIndex: 2, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' },
+  creditText: { color: 'rgba(255,255,255,0.3)', fontSize: '11px', margin: '3px 0', fontFamily: 'monospace' },
+  right: { width: '55%', backgroundColor: '#F7F6F3', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  formBox: { width: '100%', maxWidth: '400px', padding: '48px 32px' },
+  accentBar: { width: '44px', height: '4px', background: 'linear-gradient(90deg, #2E7D32, #4A148C, #E65100)', borderRadius: '2px', marginBottom: '20px' },
+  formTitle: { fontSize: '28px', fontWeight: 'bold', color: '#1A1A1A', margin: '0 0 6px 0' },
+  formSub: { color: '#888', fontSize: '14px', margin: '0 0 32px 0' },
+  error: { backgroundColor: '#fff0f0', border: '1px solid #ffcdd2', color: '#c62828', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', marginBottom: '16px' },
+  field: { marginBottom: '20px' },
+  label: { display: 'block', fontSize: '11px', fontWeight: '700', color: '#555', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' },
+  input: { width: '100%', padding: '12px 14px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', outline: 'none', backgroundColor: '#fff' },
+  btn: { width: '100%', padding: '14px', background: 'linear-gradient(135deg, #2E7D32 0%, #4A148C 50%, #006064 100%)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', letterSpacing: '0.5px', marginTop: '8px' },
+  roles: { marginTop: '36px' },
+  rolesTitle: { fontSize: '11px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '10px' },
+  roleGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' },
+  roleCard: { backgroundColor: '#fff', borderRadius: '8px', padding: '12px 6px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' },
+  roleIcon: { fontSize: '18px' },
+  roleLabel: { fontSize: '10px', color: '#666', fontWeight: '600' },
 };
 
 export default Login;
