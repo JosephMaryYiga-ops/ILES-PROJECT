@@ -10,7 +10,7 @@ import Placement from "./pages/Placement";
 import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
 
-// Blocks page if not logged in
+
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
   const role = localStorage.getItem('role');

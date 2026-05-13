@@ -21,8 +21,18 @@ function SubmitLog() {
     e.preventDefault();
     setLoading(true); setError(''); setSuccess('');
     try {
-      const res = await api.post('/logs/', { placement, week_number: parseInt(weekNumber), content });
-      await api.post(`/logs/${res.data.id}/submit/`);
+      // Step 1: Create the log as draft
+      const createRes = await api.post('/logs/', {
+        placement: placement,
+        week_number: parseInt(weekNumber),
+        content: content,
+      });
+
+      const logId = createRes.data.id;
+
+      
+      await api.post(`/logs/${logId}/submit/`);
+
       setSuccess('Log submitted successfully!');
       setContent(''); setWeekNumber('');
       setTimeout(() => navigate('/student/logs'), 2000);
