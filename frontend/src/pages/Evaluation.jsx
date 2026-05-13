@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-
+import Navbar from '../components/Navbar';
 function Evaluation() {
   const [evaluations, setEvaluations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,19 +36,10 @@ function Evaluation() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.navbar}>
-        <h2 style={styles.navTitle}>ILES</h2>
-        <div style={styles.navLinks}>
-          <span style={styles.navLink} onClick={() => navigate('/admin')}>Dashboard</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/placement')}>Placements</span>
-          <span style={styles.navLinkActive}>Evaluations</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/criteria')}>Criteria</span>
-          <span style={styles.navLink} onClick={handleLogout}>Logout</span>
-        </div>
-      </div>
+      <Navbar active="evaluation" />
 
       <div style={styles.container}>
-        <h1 style={styles.title}>📊 Evaluations</h1>
+        <h1 style={styles.title}>Evaluations</h1>
 
         {error && <div style={styles.error}>{error}</div>}
         {loading && <p style={styles.loading}>Loading evaluations...</p>}

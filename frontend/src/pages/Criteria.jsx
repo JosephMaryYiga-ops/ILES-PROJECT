@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import Navbar from '../components/Navbar';
 
 function Criteria() {
   const [criteria, setCriteria] = useState([]);
@@ -56,20 +57,11 @@ function Criteria() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.navbar}>
-        <h2 style={styles.navTitle}>ILES</h2>
-        <div style={styles.navLinks}>
-          <span style={styles.navLink} onClick={() => navigate('/admin')}>Dashboard</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/placement')}>Placements</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/evaluation')}>Evaluations</span>
-          <span style={styles.navLinkActive}>Criteria</span>
-          <span style={styles.navLink} onClick={handleLogout}>Logout</span>
-        </div>
-      </div>
+      <Navbar active="criteria" />    
 
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.title}>📋 Evaluation Criteria</h1>
+          <h1 style={styles.title}>Evaluation Criteria</h1>
           <button style={styles.addBtn} onClick={() => setShowForm(!showForm)}>
             {showForm ? 'Cancel' : '+ Add Criteria'}
           </button>

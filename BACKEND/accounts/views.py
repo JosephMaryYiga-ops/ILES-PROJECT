@@ -213,7 +213,7 @@ class EvaluationCriteriaViewSet(viewsets.ModelViewSet):
 
 # ──────────────────────────────────────────
 # EVALUATION VIEWSET
-# ──────────────────────────────────────────
+# ───────────────────────────────────────
 class EvaluationViewSet(viewsets.ModelViewSet):
     serializer_class = EvaluationSerializer
     permission_classes = [permissions.IsAuthenticated]

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import Navbar from '../components/Navbar';
 
 function Placement() {
   const [placements, setPlacements] = useState([]);
@@ -59,20 +60,12 @@ function Placement() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.navbar}>
-        <h2 style={styles.navTitle}>ILES</h2>
-        <div style={styles.navLinks}>
-          <span style={styles.navLink} onClick={() => navigate('/admin')}>Dashboard</span>
-          <span style={styles.navLinkActive}>Placements</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/evaluation')}>Evaluations</span>
-          <span style={styles.navLink} onClick={() => navigate('/admin/criteria')}>Criteria</span>
-          <span style={styles.navLink} onClick={handleLogout}>Logout</span>
-        </div>
-      </div>
+      <Navbar active="placement" />
+      
 
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.title}>🏢 Internship Placements</h1>
+          <h1 style={styles.title}> Internship Placements</h1>
           <button style={styles.addBtn} onClick={() => setShowForm(!showForm)}>
             {showForm ? 'Cancel' : '+ Add Placement'}
           </button>
