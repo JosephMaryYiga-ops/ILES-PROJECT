@@ -75,8 +75,8 @@ function Criteria() {
           <span style={styles.weightText}>
             Total Weight: <strong style={{ color: totalWeight === 100 ? '#4caf50' : '#ff9800' }}>{totalWeight}%</strong>
             {totalWeight === 100
-              ? ' ✅ Perfect — weights add up to 100%'
-              : ' ⚠️ Weights should add up to 100%'}
+              ? '  Perfect — weights add up to 100%'
+              : '  Weights should add up to 100%'}
           </span>
         </div>
 
