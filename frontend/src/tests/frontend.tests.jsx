@@ -108,3 +108,9 @@ describe('Test 4 — Weekly Logs Empty State', () => {
 // ──────────────────────────────────────────
 // TEST 5 — Submit Log form renders correctly
 // ──────────────────────────────────────────
+describe('Test 5 — Submit Log Form Renders', () => {
+  beforeEach(() => {
+    api.get.mockResolvedValueOnce({
+      data: [{ id: 1, company_name: 'MTN Uganda' }]
+    })
+  })
