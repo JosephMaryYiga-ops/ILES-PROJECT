@@ -114,3 +114,17 @@ describe('Test 5 — Submit Log Form Renders', () => {
       data: [{ id: 1, company_name: 'MTN Uganda' }]
     })
   })
+  it('shows week number, content fields and submit button', async () => {
+    render(
+      <MemoryRouter>
+        <SubmitLog />
+      </MemoryRouter>
+    )
+    //wait for the companies to load before checking for form fields
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/e.g. 1/i)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/describe your tasks/i)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /submit log/i })).toBeInTheDocument()
+    })
+  })
+})
