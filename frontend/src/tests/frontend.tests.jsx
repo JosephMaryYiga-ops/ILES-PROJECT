@@ -86,4 +86,25 @@ describe('Test 3 — Student Dashboard Renders', () => {
     })
   })
 })
+// ──────────────────────────────────────────
+// TEST 4 — Weekly Logs shows empty state
+// ──────────────────────────────────────────
+describe('Test 4 — Weekly Logs Empty State', () => {
+  beforeEach(() => {
+    api.get.mockResolvedValueOnce({ data: [] })
+  })
 
+  it('shows empty message when no logs exist', async () => {
+    render(
+      <MemoryRouter>
+        <WeeklyLogs />
+      </MemoryRouter>
+    )
+    await waitFor(() => {
+      expect(screen.getByText(/you have not submitted any logs yet/i)).toBeInTheDocument()
+    })
+  })
+})
+// ──────────────────────────────────────────
+// TEST 5 — Submit Log form renders correctly
+// ──────────────────────────────────────────
