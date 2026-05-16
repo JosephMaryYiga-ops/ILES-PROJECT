@@ -6,6 +6,7 @@ import StudentDashboard from '../pages/StudentDashboard'
 import WeeklyLogs from '../pages/WeeklyLogs'
 import SubmitLog from '../pages/SubmitLog'
 import Criteria from '../pages/Criteria'
+
 // Mock the api module so tests don't call the real backend
 vi.mock('../api', () => ({
   default: {
@@ -32,7 +33,7 @@ describe('Test 1 — Login Page Renders', () => {
   })
 })
 
- // ──────────────────────────────────────────
+// ──────────────────────────────────────────
 // TEST 2 — Login shows error on wrong credentials
 // ──────────────────────────────────────────
 describe('Test 2 — Login Error Message', () => {
@@ -59,7 +60,6 @@ describe('Test 2 — Login Error Message', () => {
   })
 })
 
-// 
 // ──────────────────────────────────────────
 // TEST 3 — Student Dashboard renders stats
 // ──────────────────────────────────────────
@@ -75,7 +75,8 @@ describe('Test 3 — Student Dashboard Renders', () => {
       return Promise.resolve({ data: [] })
     })
   })
-   it('shows welcome message with username', async () => {
+
+  it('shows welcome message with username', async () => {
     render(
       <MemoryRouter>
         <StudentDashboard />
@@ -86,6 +87,7 @@ describe('Test 3 — Student Dashboard Renders', () => {
     })
   })
 })
+
 // ──────────────────────────────────────────
 // TEST 4 — Weekly Logs shows empty state
 // ──────────────────────────────────────────
@@ -105,6 +107,7 @@ describe('Test 4 — Weekly Logs Empty State', () => {
     })
   })
 })
+
 // ──────────────────────────────────────────
 // TEST 5 — Submit Log form renders correctly
 // ──────────────────────────────────────────
@@ -114,13 +117,13 @@ describe('Test 5 — Submit Log Form Renders', () => {
       data: [{ id: 1, company_name: 'MTN Uganda' }]
     })
   })
+
   it('shows week number, content fields and submit button', async () => {
     render(
       <MemoryRouter>
         <SubmitLog />
       </MemoryRouter>
     )
-    //wait for the companies to load before checking for form fields
     await waitFor(() => {
       expect(screen.getByPlaceholderText(/e.g. 1/i)).toBeInTheDocument()
       expect(screen.getByPlaceholderText(/describe your tasks/i)).toBeInTheDocument()
