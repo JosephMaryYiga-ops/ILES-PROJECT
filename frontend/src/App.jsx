@@ -16,7 +16,11 @@ function ProtectedRoute({ children, allowedRoles }) {
   const role = localStorage.getItem('role');
 
   if (!token) return <Navigate to="/" />;
-  if (allowedRoles && !allowedRoles.includes(role)) return <Navigate to="/" />;
+  
+  // FIX: If role is empty string, treat as 'admin'
+  const effectiveRole = (role === '' || !role) ? 'admin' : role;
+  
+  if (allowedRoles && !allowedRoles.includes(effectiveRole)) return <Navigate to="/" />;
   return children;
 }
 
