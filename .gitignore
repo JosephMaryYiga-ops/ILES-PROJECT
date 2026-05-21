@@ -65,3 +65,6 @@ Thumbs.db
 frontend/node_modules/
 BACKEND/venv/
 db.sqlite3
+.env
+.gitignore
+
