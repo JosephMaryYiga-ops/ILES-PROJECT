@@ -38,6 +38,24 @@ function AdminDashboard() {
           </div>
         </div>
 
+        <div style={{ marginBottom: '24px' }}>
+  <button 
+    onClick={() => navigate('/admin/users')}
+    style={{ 
+      padding: '12px 24px', 
+      backgroundColor: '#2ecc71', 
+      color: 'white', 
+      border: 'none', 
+      borderRadius: '8px', 
+      cursor: 'pointer',
+      fontSize: '14px',
+      fontWeight: 'bold'
+    }}
+  >
+    👥 Manage Users
+  </button>
+</div>
+
         {loading && <p style={S.loading}>Loading...</p>}
 
         <div style={S.stats}>

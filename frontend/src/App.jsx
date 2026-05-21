@@ -9,7 +9,7 @@ import ReviewLogs from "./pages/ReviewLogs";
 import Placement from "./pages/Placement";
 import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
-
+import UserManagement from "./pages/UserManagement";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
@@ -81,6 +81,11 @@ function App() {
             <Criteria />
           </ProtectedRoute>
         } />
+        <Route path="/admin/users" element={
+  <ProtectedRoute allowedRoles={['admin']}>
+    <UserManagement />
+  </ProtectedRoute>
+} />
       </Routes>
     </BrowserRouter>
   );
