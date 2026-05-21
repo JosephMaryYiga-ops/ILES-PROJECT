@@ -19,7 +19,7 @@ function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await api.get('/admin/users/');
+      const response = await api.get('/users/');
       setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -31,7 +31,7 @@ function UserManagement() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/admin/users/create/', formData);
+      await api.post('/users/', formData);
       setShowForm(false);
       setFormData({ username: '', email: '', password: '', role: 'student' });
       fetchUsers(); // Refresh list
@@ -43,7 +43,7 @@ function UserManagement() {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await api.delete(`/admin/users/${userId}/delete/`);
+        await api.delete(`/users/${userId}/`);
         fetchUsers(); // Refresh list
       } catch (error) {
         console.error('Error deleting user:', error);
