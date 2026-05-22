@@ -16,6 +16,7 @@ const navLinks = {
     { label: 'Placements', path: '/admin/placement', key: 'placement' },
     { label: 'Evaluations', path: '/admin/evaluation', key: 'evaluation' },
     { label: 'Criteria', path: '/admin/criteria', key: 'criteria' },
+    { label: 'Users', path: '/admin/users', key: 'users' },
   ],
 };
 
@@ -45,9 +46,10 @@ function Navbar({ active }) {
     }
   }, [username]);
   
-  const links = role === 'student' ? navLinks.student
-    : role === 'admin' ? navLinks.admin
-    : navLinks.supervisor;
+  let links = [];
+  if (role === 'student') links = navLinks.student;
+  else if (role === 'admin') links = navLinks.admin;
+  else if (role === 'workplace_supervisor' || role === 'academic_supervisor') links = navLinks.supervisor;
 
   const handleLogout = () => {
     localStorage.clear();
