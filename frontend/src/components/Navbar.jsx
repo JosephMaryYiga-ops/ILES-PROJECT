@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const navLinks = {
   student: [
@@ -36,6 +37,14 @@ function Navbar({ active }) {
   const navigate = useNavigate();
   const role = localStorage.getItem('role');
   const username = localStorage.getItem('username');
+  const [userInitial, setUserInitial] = useState('?');
+  
+  useEffect(() => {
+    if (username && username.length > 0) {
+      setUserInitial(username[0].toUpperCase());
+    }
+  }, [username]);
+  
   const links = role === 'student' ? navLinks.student
     : role === 'admin' ? navLinks.admin
     : navLinks.supervisor;
@@ -43,6 +52,10 @@ function Navbar({ active }) {
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
+  };
+
+  const getRoleColorForAvatar = () => {
+    return roleColors[role] || '#E65100';
   };
 
   return (
@@ -65,10 +78,16 @@ function Navbar({ active }) {
         </div>
       </div>
       <div style={styles.right}>
-        <div style={{ ...styles.roleBadge, backgroundColor: roleColors[role] || '#333' }}>
-          {roleLabels[role] || role}
+        <div style={{
+          ...styles.avatar,
+          backgroundColor: getRoleColorForAvatar()
+        }}>
+          {userInitial}
         </div>
         <span style={styles.username}>{username}</span>
+        <span style={{ ...styles.roleBadge, backgroundColor: roleColors[role] || '#333' }}>
+          {roleLabels[role] || role}
+        </span>
         <button style={styles.logoutBtn} onClick={handleLogout}>Sign Out</button>
       </div>
     </nav>
@@ -85,9 +104,10 @@ const styles = {
   link: { color: 'rgba(255,255,255,0.55)', cursor: 'pointer', fontSize: '13px', padding: '6px 12px', borderRadius: '6px' },
   linkActive: { color: '#fff', cursor: 'pointer', fontSize: '13px', padding: '6px 12px', borderRadius: '6px', backgroundColor: 'rgba(255,255,255,0.1)', fontWeight: '600' },
   right: { display: 'flex', alignItems: 'center', gap: '12px' },
+  avatar: { width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: 'bold', color: '#fff' },
+  username: { color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: '500' },
   roleBadge: { color: '#fff', padding: '3px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: '700' },
-  username: { color: 'rgba(255,255,255,0.7)', fontSize: '13px' },
-  logoutBtn: { backgroundColor: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '5px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
+  logoutBtn: { backgroundColor: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
 };
 
 export default Navbar;
