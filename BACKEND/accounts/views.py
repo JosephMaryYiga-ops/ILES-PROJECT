@@ -98,6 +98,7 @@ class InternshipPlacementViewSet(viewsets.ModelViewSet):
         return InternshipPlacement.objects.none()
 
     def get_permissions(self):
+        # Admin can create, update, delete
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [IsAdmin()]
         return [permissions.IsAuthenticated()]
