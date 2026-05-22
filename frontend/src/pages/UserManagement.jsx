@@ -114,6 +114,27 @@ function UserManagement() {
 
         {/* Add User Form */}
         {showForm && (
+          {/* Search & Filter Bar */}
+<div style={styles.searchBar}>
+  <input
+    type="text"
+    placeholder="🔍 Search by username or email..."
+    style={styles.searchInput}
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <select
+    style={styles.filterSelect}
+    value={roleFilter}
+    onChange={(e) => setRoleFilter(e.target.value)}
+  >
+    <option value="all">All Roles</option>
+    <option value="student">Student</option>
+    <option value="workplace_supervisor">Workplace Supervisor</option>
+    <option value="academic_supervisor">Academic Supervisor</option>
+    <option value="admin">Admin</option>
+  </select>
+</div>
           <div style={styles.formCard}>
             <h3 style={styles.formTitle}>Create New User</h3>
             <form onSubmit={handleCreateUser}>
