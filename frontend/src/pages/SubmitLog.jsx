@@ -4,101 +4,137 @@ import api from '../api';
 import Navbar from '../components/Navbar';
 
 function SubmitLog() {
-  const [placements, setPlacements] = useState([]);
-  const [placement, setPlacement] = useState('');
-  const [weekNumber, setWeekNumber] = useState('');
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    week_number: '',
+    content: '',
+    placement: ''
+  });
+  const [placements, setPlacements] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    api.get('/placements/').then(r => { setPlacements(r.data); if (r.data.length > 0) setPlacement(r.data[0].id); });
+    fetchPlacements();
   }, []);
+
+  const fetchPlacements = async () => {
+    try {
+      const response = await api.get('/placements/');
+      setPlacements(response.data);
+    } catch (err) {
+      console.error('Error fetching placements:', err);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); setError(''); setSuccess('');
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
     try {
-      // Step 1: Create the log as draft
-      const createRes = await api.post('/logs/', {
-        placement: placement,
-        week_number: parseInt(weekNumber),
-        content: content,
+      await api.post('/logs/', {
+        week_number: parseInt(formData.week_number),
+        content: formData.content,
+        placement: formData.placement || null,
+        status: 'submitted'
       });
-
-      const logId = createRes.data.id;
-
-      
-      await api.post(`/logs/${logId}/submit/`);
-
-      setSuccess('Log submitted successfully!');
-      setContent(''); setWeekNumber('');
+      setSuccess('Weekly log submitted successfully!');
+      setFormData({ week_number: '', content: '', placement: '' });
       setTimeout(() => navigate('/student/logs'), 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to submit. Please try again.');
-    } finally { setLoading(false); }
+      setError(err.response?.data?.detail || 'Failed to submit log. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={S.page}>
+    <div style={styles.page}>
       <Navbar active="submit" />
-      <div style={S.container}>
-        <h1 style={S.title}>Submit Weekly Log</h1>
-        <p style={{ color: '#666', fontSize: '13px', marginTop: '-10px', marginBottom: '20px' }}>
-           Be honest bossman
-        </p>
-
-        {success && <div style={S.success}>{success} Redirecting...</div>}
-        {error && <div style={S.error}>{error}</div>}
-
-        <div style={S.card}>
-          <form onSubmit={handleSubmit}>
-            <div style={S.field}>
-              <label style={S.label}>Internship Placement</label>
-              <select style={S.input} value={placement} onChange={e => setPlacement(e.target.value)} required>
-                {placements.length === 0 && <option>No placement found</option>}
-                {placements.map(p => <option key={p.id} value={p.id}>{p.company_name}</option>)}
-              </select>
-            </div>
-            <div style={S.field}>
-              <label style={S.label}>Week Number</label>
-              <input style={S.input} type="number" min="1" placeholder="e.g. 1" value={weekNumber} onChange={e => setWeekNumber(e.target.value)} required />
-            </div>
-            <div style={S.field}>
-              <label style={S.label}>What did you do this week?</label>
-              <textarea style={S.textarea} rows={8} placeholder="Describe your tasks, what you learned, challenges you faced..." value={content} onChange={e => setContent(e.target.value)} required />
-              <p style={S.count}>{content.length} characters</p>
-            </div>
-            <div style={S.btns}>
-              <button type="button" style={S.cancelBtn} onClick={() => navigate('/student')}>Cancel</button>
-              <button type="submit" style={loading ? { ...S.submitBtn, opacity: 0.7 } : S.submitBtn} disabled={loading}>
-                {loading ? 'Submitting...' : 'Submit Log'}
-              </button>
-            </div>
-          </form>
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Submit Weekly Log</h1>
+          <p style={styles.subtitle}>Record your weekly internship activities</p>
         </div>
+
+        {error && <div style={styles.error}>{error}</div>}
+        {success && <div style={styles.success}>{success}</div>}
+
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Week Number *</label>
+            <input
+              type="number"
+              min="1"
+              max="52"
+              style={styles.input}
+              value={formData.week_number}
+              onChange={(e) => setFormData({...formData, week_number: e.target.value})}
+              required
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Placement (Optional)</label>
+            <select
+              style={styles.input}
+              value={formData.placement}
+              onChange={(e) => setFormData({...formData, placement: e.target.value})}
+            >
+              <option value="">Select placement</option>
+              {placements.map(p => (
+                <option key={p.id} value={p.id}>
+                  {p.company_name} ({p.start_date} to {p.end_date})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Log Content / Activities *</label>
+            <textarea
+              style={styles.textarea}
+              rows="8"
+              placeholder="Describe what you did this week..."
+              value={formData.content}
+              onChange={(e) => setFormData({...formData, content: e.target.value})}
+              required
+            />
+          </div>
+
+          <div style={styles.buttonGroup}>
+            <button type="button" onClick={() => navigate('/student/logs')} style={styles.cancelButton}>
+              Cancel
+            </button>
+            <button type="submit" disabled={loading} style={styles.submitButton}>
+              {loading ? 'Submitting...' : 'Submit Log'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
 
-const S = {
-  page: { minHeight: '100vh', backgroundColor: '#F5F5F0', fontFamily: 'Arial, sans-serif' },
-  container: { maxWidth: '700px', margin: '0 auto', padding: '32px 24px' },
-  title: { color: '#1A1A1A', marginBottom: '24px', fontSize: '24px', fontWeight: 'bold' },
-  success: { backgroundColor: '#E8F5E9', color: '#2E7D32', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #A5D6A7' },
-  error: { backgroundColor: '#FFF0F0', color: '#C62828', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #FFCDD2' },
-  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '32px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
-  field: { marginBottom: '20px' },
-  label: { display: 'block', fontSize: '11px', fontWeight: '700', color: '#555', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' },
-  input: { width: '100%', padding: '12px 14px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' },
-  textarea: { width: '100%', padding: '12px 14px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' },
-  count: { color: '#bbb', fontSize: '11px', textAlign: 'right', margin: '4px 0 0 0' },
-  btns: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
-  cancelBtn: { padding: '12px 24px', border: '2px solid #E8E8E8', borderRadius: '8px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '14px', color: '#666' },
-  submitBtn: { padding: '12px 24px', background: 'linear-gradient(135deg, #2E7D32, #006064)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700' },
+const styles = {
+  page: { minHeight: '100vh', backgroundColor: '#F5F5F0' },
+  container: { maxWidth: '800px', margin: '0 auto', padding: '32px 24px' },
+  header: { marginBottom: '32px' },
+  title: { fontSize: '28px', fontWeight: 'bold', color: '#1A1A1A', margin: '0 0 8px 0' },
+  subtitle: { color: '#666', fontSize: '14px', margin: 0 },
+  error: { backgroundColor: '#fff0f0', border: '1px solid #ffcdd2', color: '#c62828', padding: '12px', borderRadius: '8px', marginBottom: '20px' },
+  success: { backgroundColor: '#e8f5e9', border: '1px solid #a5d6a7', color: '#2e7d32', padding: '12px', borderRadius: '8px', marginBottom: '20px' },
+  form: { backgroundColor: '#fff', borderRadius: '12px', padding: '32px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
+  formGroup: { marginBottom: '24px' },
+  label: { display: 'block', fontSize: '13px', fontWeight: '600', color: '#333', marginBottom: '8px' },
+  input: { width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' },
+  textarea: { width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box', resize: 'vertical' },
+  buttonGroup: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' },
+  cancelButton: { padding: '12px 24px', backgroundColor: '#f5f5f5', color: '#666', border: 'none', borderRadius: '8px', cursor: 'pointer' },
+  submitButton: { padding: '12px 24px', backgroundColor: '#2E7D32', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' },
 };
 
 export default SubmitLog;
