@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
 
+
 function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -15,6 +16,15 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [showRoleInfo, setShowRoleInfo] = useState(false);
   const [selectedRoleInfo, setSelectedRoleInfo] = useState('');
+  const [roleParam] = useState(() => {
+  const params = new URLSearchParams(window.location.search);
+  const role = params.get('role');
+  if (role === 'workplace_supervisor') return 'workplace_supervisor';
+  if (role === 'academic_supervisor') return 'academic_supervisor';
+  if (role === 'admin') return 'admin';
+  if (role === 'evaluator') return 'evaluator';
+  return 'student';
+});
 
   const roleInfo = {
     student: {

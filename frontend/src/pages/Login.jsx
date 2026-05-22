@@ -44,11 +44,11 @@ function Login() {
           <h1 style={styles.systemName}>Internship &<br />Logging Evaluation<br />System</h1>
           <p style={styles.tagline}>Manage your internship progress easily</p>
           <div style={styles.pills}>
-            <span style={{ ...styles.pill, background: '#2E7D32' }}>Students</span>
-            <span style={{ ...styles.pill, background: '#4A148C' }}>Supervisors</span>
-            <span style={{ ...styles.pill, background: '#E65100' }}>Admins</span>
-            <span style={{ ...styles.pill, background: '#006064' }}>Evaluators</span>
-          </div>
+  <a href="/signup?role=student" style={{ ...styles.pill, background: '#2E7D32', textDecoration: 'none', cursor: 'pointer' }}>Students</a>
+  <a href="/signup?role=workplace_supervisor" style={{ ...styles.pill, background: '#4A148C', textDecoration: 'none', cursor: 'pointer' }}>Supervisors</a>
+  <a href="/signup?role=admin" style={{ ...styles.pill, background: '#E65100', textDecoration: 'none', cursor: 'pointer' }}>Admins</a>
+  <a href="/signup?role=evaluator" style={{ ...styles.pill, background: '#006064', textDecoration: 'none', cursor: 'pointer' }}>Evaluators</a>
+      </div>
         </div>
         <div style={styles.credit}>
           <p style={styles.creditText}>Developed by :</p>
@@ -82,17 +82,23 @@ function Login() {
           <div style={styles.roles}>
             <p style={styles.rolesTitle}>Access Levels</p>
             <div style={styles.roleGrid}>
-              {[
-                { label: 'Student', color: '#2E7D32' },
-                { label: 'Supervisor', color: '#4A148C' },
-                { label: 'Admin', color: '#E65100' },
-                { label: 'Evaluator', color: '#006064'},
-              ].map(r => (
-                <div key={r.label} style={{ ...styles.roleCard, borderTop: `3px solid ${r.color}` }}>
-                  <span style={styles.roleIcon}>{r.icon}</span>
-                  <span style={styles.roleLabel}>{r.label}</span>
-                </div>
-              ))}
+  <a href="/signup?role=student" style={{ ...styles.roleCard, borderTop: '3px solid #2E7D32', textDecoration: 'none', cursor: 'pointer' }}>
+    <span style={styles.roleIcon}>🎓</span>
+    <span style={styles.roleLabel}>Student</span>
+  </a>
+  <a href="/signup?role=workplace_supervisor" style={{ ...styles.roleCard, borderTop: '3px solid #4A148C', textDecoration: 'none', cursor: 'pointer' }}>
+    <span style={styles.roleIcon}>👔</span>
+    <span style={styles.roleLabel}>Supervisor</span>
+  </a>
+  <a href="/signup?role=admin" style={{ ...styles.roleCard, borderTop: '3px solid #E65100', textDecoration: 'none', cursor: 'pointer' }}>
+    <span style={styles.roleIcon}>⚙️</span>
+    <span style={styles.roleLabel}>Admin</span>
+  </a>
+  <a href="/signup?role=evaluator" style={{ ...styles.roleCard, borderTop: '3px solid #006064', textDecoration: 'none', cursor: 'pointer' }}>
+    <span style={styles.roleIcon}>📋</span>
+    <span style={styles.roleLabel}>Evaluator</span>
+  </a>
+</div>
             </div>
           </div>
         </div>

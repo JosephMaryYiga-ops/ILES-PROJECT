@@ -10,7 +10,7 @@ import Placement from "./pages/Placement";
 import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
-
+import Signup from "./pages/Signup";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
@@ -30,6 +30,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Public */}
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Login />} />
 
         {/* Student only */}
