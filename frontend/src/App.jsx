@@ -11,6 +11,7 @@ import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
 
+
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
   const role = localStorage.getItem('role');
