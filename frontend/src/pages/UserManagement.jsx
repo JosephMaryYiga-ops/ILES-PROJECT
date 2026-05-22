@@ -51,25 +51,31 @@ function UserManagement() {
     }
   };
 
-  const getRoleColor = (role) => {
-    switch(role) {
-      case 'admin': return '#E65100';
-      case 'student': return '#2E7D32';
-      case 'workplace_supervisor': return '#4A148C';
-      case 'academic_supervisor': return '#006064';
-      default: return '#95a5a6';
-    }
-  };
+ const getRoleColor = (role) => {
+  // If role is empty string or null, treat as admin
+  if (!role || role === '') return '#E65100';
+  
+  switch(role) {
+    case 'admin': return '#E65100';
+    case 'student': return '#2E7D32';
+    case 'workplace_supervisor': return '#4A148C';
+    case 'academic_supervisor': return '#006064';
+    default: return '#95a5a6';
+  }
+};
 
   const getRoleLabel = (role) => {
-    switch(role) {
-      case 'admin': return 'Admin';
-      case 'student': return 'Student';
-      case 'workplace_supervisor': return 'WP Supervisor';
-      case 'academic_supervisor': return 'AC Supervisor';
-      default: return role;
-    }
-  };
+  // If role is empty string or null, treat as admin
+  if (!role || role === '') return 'Admin';
+  
+  switch(role) {
+    case 'admin': return 'Admin';
+    case 'student': return 'Student';
+    case 'workplace_supervisor': return 'WP Supervisor';
+    case 'academic_supervisor': return 'AC Supervisor';
+    default: return 'Admin';
+  }
+};
 
   if (loading) return (
     <div style={styles.page}>
