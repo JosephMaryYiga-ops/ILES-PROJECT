@@ -4,111 +4,206 @@ import api from '../api';
 import Navbar from '../components/Navbar';
 
 function ReviewLogs() {
+  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [reviewing, setReviewing] = useState(null);
-  const [comment, setComment] = useState('');
-  const [score, setScore] = useState('');
-  const [success, setSuccess] = useState('');
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [reviewData, setReviewData] = useState({
+    comments: '',
+    score: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState('');
 
-  useEffect(() => { fetchLogs(); }, []);
+  useEffect(() => {
+    fetchPendingLogs();
+  }, []);
 
-  const fetchLogs = async () => {
+  const fetchPendingLogs = async () => {
     try {
-      const r = await api.get('/logs/');
-      setLogs(r.data.filter(l => l.status === 'submitted'));
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
+      const response = await api.get('/logs/?status=submitted');
+      setLogs(response.data);
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReview = async (logId) => {
+    setSubmitting(true);
     setError('');
+    setSuccess('');
+
     try {
-      await api.post('/reviews/', { log: logId, comments: comment, score: parseFloat(score) });
-      setSuccess('Review submitted!');
-      setReviewing(null); setComment(''); setScore('');
-      fetchLogs();
-    } catch (err) { setError(err.response?.data?.detail || 'Failed to submit review.'); }
+      await api.post(`/reviews/`, {
+        log: logId,
+        comments: reviewData.comments,
+        score: parseFloat(reviewData.score)
+      });
+      
+      setSuccess('Review submitted successfully!');
+      setSelectedLog(null);
+      setReviewData({ comments: '', score: '' });
+      fetchPendingLogs();
+      
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to submit review. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  return (
-    <div style={S.page}>
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'submitted': return '#1565C0';
+      default: return '#999';
+    }
+  };
+
+  if (loading) return (
+    <div style={styles.page}>
       <Navbar active="review" />
-      <div style={S.container}>
-        <h1 style={S.title}>Review Logs</h1>
-        {success && <div style={S.success}>{success}</div>}
-        {error && <div style={S.error}>{error}</div>}
-        {loading && <p style={S.loading}>Loading...</p>}
-        {!loading && logs.length === 0 && <div style={S.emptyBox}><p style={S.emptyText}>No logs waiting for review right now.</p></div>}
+      <div style={styles.container}>Loading...</div>
+    </div>
+  );
 
-        <div style={S.list}>
-          {logs.map(log => (
-            <div key={log.id} style={S.card}>
-              <div style={S.cardTop}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={S.weekCircle}>W{log.week_number}</div>
-                  <div>
-                    <h3 style={S.weekTitle}>Week {log.week_number}</h3>
-                    <p style={S.studentName}>Student: {log.student_name}</p>
-                  </div>
-                </div>
-                <span style={S.badge}>SUBMITTED</span>
-              </div>
-              <p style={S.content}>{log.content}</p>
-
-              {reviewing === log.id ? (
-                <div style={S.reviewForm}>
-                  <h4 style={S.reviewTitle}>Write Your Review</h4>
-                  <textarea style={S.textarea} rows={4} placeholder="Write your feedback..." value={comment} onChange={e => setComment(e.target.value)} />
-                  <div style={S.scoreRow}>
-                    <label style={S.label}>Score (0–10):</label>
-                    <input style={S.scoreInput} type="number" min="0" max="10" step="0.5" placeholder="e.g. 8.5" value={score} onChange={e => setScore(e.target.value)} />
-                  </div>
-                  <div style={S.reviewBtns}>
-                    <button style={S.cancelBtn} onClick={() => setReviewing(null)}>Cancel</button>
-                    <button style={S.submitBtn} onClick={() => handleReview(log.id)}>Submit Review</button>
-                  </div>
-                </div>
-              ) : (
-                <button style={S.reviewBtn} onClick={() => setReviewing(log.id)}>Write Review</button>
-              )}
-            </div>
-          ))}
+  return (
+    <div style={styles.page}>
+      <Navbar active="review" />
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Review Weekly Logs</h1>
+          <p style={styles.subtitle}>Review and score student internship logs</p>
         </div>
+
+        {error && <div style={styles.error}>{error}</div>}
+        {success && <div style={styles.success}>{success}</div>}
+
+        {logs.length === 0 ? (
+          <div style={styles.empty}>No pending logs to review.</div>
+        ) : (
+          <div style={styles.grid}>
+            {logs.map((log) => (
+              <div key={log.id} style={styles.card}>
+                <div style={styles.cardHeader}>
+                  <div>
+                    <span style={styles.weekNumber}>Week {log.week_number}</span>
+                    <span style={styles.studentName}>{log.student?.username || 'Student'}</span>
+                  </div>
+                  <span style={{...styles.statusBadge, backgroundColor: getStatusColor(log.status)}}>
+                    {log.status.toUpperCase()}
+                  </span>
+                </div>
+
+                <div style={styles.cardContent}>
+                  <div style={styles.infoRow}>
+                    <strong>Placement:</strong> {log.placement?.company_name || 'N/A'}
+                  </div>
+                  <div style={styles.infoRow}>
+                    <strong>Submitted:</strong> {new Date(log.created_at).toLocaleDateString()}
+                  </div>
+                  <div style={styles.logContent}>
+                    <strong>Log Content:</strong>
+                    <p>{log.content}</p>
+                  </div>
+                </div>
+
+                {selectedLog === log.id ? (
+                  <div style={styles.reviewForm}>
+                    <h4>Submit Review</h4>
+                    <div style={styles.formGroup}>
+                      <label style={styles.label}>Comments / Feedback *</label>
+                      <textarea
+                        style={styles.textarea}
+                        rows="4"
+                        placeholder="Provide feedback on the student's work..."
+                        value={reviewData.comments}
+                        onChange={(e) => setReviewData({...reviewData, comments: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div style={styles.formGroup}>
+                      <label style={styles.label}>Score (0-10) *</label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        max="10"
+                        style={styles.input}
+                        value={reviewData.score}
+                        onChange={(e) => setReviewData({...reviewData, score: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div style={styles.buttonGroup}>
+                      <button 
+                        style={styles.cancelButton} 
+                        onClick={() => {
+                          setSelectedLog(null);
+                          setReviewData({ comments: '', score: '' });
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        style={styles.submitButton} 
+                        onClick={() => handleReview(log.id)}
+                        disabled={submitting || !reviewData.comments || !reviewData.score}
+                      >
+                        {submitting ? 'Submitting...' : 'Submit Review'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={styles.cardFooter}>
+                    <button 
+                      style={styles.reviewButton} 
+                      onClick={() => setSelectedLog(log.id)}
+                    >
+                      Review Log
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-const S = {
-  page: { minHeight: '100vh', backgroundColor: '#F5F5F0', fontFamily: 'Arial, sans-serif' },
-  container: { maxWidth: '900px', margin: '0 auto', padding: '32px 24px' },
-  title: { color: '#1A1A1A', marginBottom: '24px', fontSize: '24px', fontWeight: 'bold' },
-  success: { backgroundColor: '#E8F5E9', color: '#2E7D32', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px' },
-  error: { backgroundColor: '#FFF0F0', color: '#C62828', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px' },
-  loading: { textAlign: 'center', color: '#999' },
-  emptyBox: { textAlign: 'center', padding: '80px 0' },
-  emptyText: { color: '#bbb', fontSize: '15px' },
-  list: { display: 'flex', flexDirection: 'column', gap: '16px' },
-  card: { backgroundColor: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
-  cardTop: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' },
-  weekCircle: { width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#E3F2FD', color: '#1565C0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700' },
-  weekTitle: { margin: 0, fontSize: '15px', fontWeight: '700', color: '#1A1A1A' },
-  studentName: { margin: 0, fontSize: '12px', color: '#999' },
-  badge: { backgroundColor: '#E3F2FD', color: '#1565C0', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: '700' },
-  content: { color: '#555', fontSize: '14px', lineHeight: '1.6', marginBottom: '16px' },
-  reviewBtn: { background: 'linear-gradient(135deg, #4A148C, #006064)', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '700' },
-  reviewForm: { backgroundColor: '#F8F6FF', padding: '20px', borderRadius: '8px', border: '1px solid #E8E0FF' },
-  reviewTitle: { margin: '0 0 12px 0', color: '#4A148C', fontSize: '14px', fontWeight: '700' },
-  textarea: { width: '100%', padding: '12px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' },
-  scoreRow: { display: 'flex', alignItems: 'center', gap: '12px', margin: '12px 0' },
-  label: { fontWeight: '700', fontSize: '13px', color: '#555' },
-  scoreInput: { padding: '8px 12px', border: '2px solid #E8E8E8', borderRadius: '8px', fontSize: '14px', width: '100px' },
-  reviewBtns: { display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '12px' },
-  cancelBtn: { padding: '10px 20px', border: '2px solid #E8E8E8', borderRadius: '8px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '13px', color: '#666' },
-  submitBtn: { padding: '10px 20px', background: 'linear-gradient(135deg, #4A148C, #006064)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '700' },
+const styles = {
+  page: { minHeight: '100vh', backgroundColor: '#F5F5F0' },
+  container: { maxWidth: '1000px', margin: '0 auto', padding: '32px 24px' },
+  header: { marginBottom: '32px' },
+  title: { fontSize: '28px', fontWeight: 'bold', color: '#1A1A1A', margin: '0 0 8px 0' },
+  subtitle: { color: '#666', fontSize: '14px', margin: 0 },
+  error: { backgroundColor: '#fff0f0', border: '1px solid #ffcdd2', color: '#c62828', padding: '12px', borderRadius: '8px', marginBottom: '20px' },
+  success: { backgroundColor: '#e8f5e9', border: '1px solid #a5d6a7', color: '#2e7d32', padding: '12px', borderRadius: '8px', marginBottom: '20px' },
+  empty: { textAlign: 'center', padding: '60px', backgroundColor: '#fff', borderRadius: '12px', color: '#999' },
+  grid: { display: 'flex', flexDirection: 'column', gap: '20px' },
+  card: { backgroundColor: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
+  cardHeader: { padding: '16px 20px', backgroundColor: '#fafafa', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  weekNumber: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
+  studentName: { fontSize: '13px', color: '#666', marginLeft: '12px' },
+  statusBadge: { padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 'bold', color: '#fff' },
+  cardContent: { padding: '20px' },
+  infoRow: { fontSize: '13px', color: '#666', marginBottom: '8px' },
+  logContent: { marginTop: '16px', padding: '12px', backgroundColor: '#f9f9f9', borderRadius: '8px' },
+  reviewForm: { padding: '20px', borderTop: '1px solid #eee', backgroundColor: '#f9f9f9' },
+  formGroup: { marginBottom: '16px' },
+  label: { display: 'block', fontSize: '13px', fontWeight: '600', color: '#333', marginBottom: '8px' },
+  textarea: { width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box', resize: 'vertical' },
+  input: { width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
+  buttonGroup: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '16px' },
+  cancelButton: { padding: '10px 20px', backgroundColor: '#f5f5f5', color: '#666', border: 'none', borderRadius: '6px', cursor: 'pointer' },
+  submitButton: { padding: '10px 20px', backgroundColor: '#4A148C', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' },
+  cardFooter: { padding: '16px 20px', borderTop: '1px solid #eee', backgroundColor: '#fafafa', display: 'flex', justifyContent: 'flex-end' },
+  reviewButton: { padding: '8px 20px', backgroundColor: '#4A148C', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' },
 };
 
 export default ReviewLogs;
