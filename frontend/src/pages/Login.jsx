@@ -22,7 +22,6 @@ function Login() {
       localStorage.setItem('username', user.username);
       localStorage.setItem('user_id', user.id);
 
-      // FIX: Force redirect to admin for superuser testing
       console.log('User role from backend:', user.role);
       navigate('/admin');
       
@@ -35,7 +34,6 @@ function Login() {
 
   return (
     <div style={styles.page}>
-      {/* Left Panel */}
       <div style={styles.left}>
         <div style={styles.circle1} />
         <div style={styles.circle2} />
@@ -44,11 +42,11 @@ function Login() {
           <h1 style={styles.systemName}>Internship &<br />Logging Evaluation<br />System</h1>
           <p style={styles.tagline}>Manage your internship progress easily</p>
           <div style={styles.pills}>
-  <a href="/signup?role=student" style={{ ...styles.pill, background: '#2E7D32', textDecoration: 'none', cursor: 'pointer' }}>Students</a>
-  <a href="/signup?role=workplace_supervisor" style={{ ...styles.pill, background: '#4A148C', textDecoration: 'none', cursor: 'pointer' }}>Supervisors</a>
-  <a href="/signup?role=admin" style={{ ...styles.pill, background: '#E65100', textDecoration: 'none', cursor: 'pointer' }}>Admins</a>
-  <a href="/signup?role=evaluator" style={{ ...styles.pill, background: '#006064', textDecoration: 'none', cursor: 'pointer' }}>Evaluators</a>
-      </div>
+            <a href="/signup?role=student" style={{ ...styles.pill, background: '#2E7D32', textDecoration: 'none', cursor: 'pointer' }}>Students</a>
+            <a href="/signup?role=workplace_supervisor" style={{ ...styles.pill, background: '#4A148C', textDecoration: 'none', cursor: 'pointer' }}>Supervisors</a>
+            <a href="/signup?role=admin" style={{ ...styles.pill, background: '#E65100', textDecoration: 'none', cursor: 'pointer' }}>Admins</a>
+            <a href="/signup?role=evaluator" style={{ ...styles.pill, background: '#006064', textDecoration: 'none', cursor: 'pointer' }}>Evaluators</a>
+          </div>
         </div>
         <div style={styles.credit}>
           <p style={styles.creditText}>Developed by :</p>
@@ -56,7 +54,6 @@ function Login() {
         </div>
       </div>
 
-      {/* Right Panel */}
       <div style={styles.right}>
         <div style={styles.formBox}>
           <div style={styles.accentBar} />
@@ -82,23 +79,22 @@ function Login() {
           <div style={styles.roles}>
             <p style={styles.rolesTitle}>Access Levels</p>
             <div style={styles.roleGrid}>
-  <a href="/signup?role=student" style={{ ...styles.roleCard, borderTop: '3px solid #2E7D32', textDecoration: 'none', cursor: 'pointer' }}>
-    <span style={styles.roleIcon}>🎓</span>
-    <span style={styles.roleLabel}>Student</span>
-  </a>
-  <a href="/signup?role=workplace_supervisor" style={{ ...styles.roleCard, borderTop: '3px solid #4A148C', textDecoration: 'none', cursor: 'pointer' }}>
-    <span style={styles.roleIcon}>👔</span>
-    <span style={styles.roleLabel}>Supervisor</span>
-  </a>
-  <a href="/signup?role=admin" style={{ ...styles.roleCard, borderTop: '3px solid #E65100', textDecoration: 'none', cursor: 'pointer' }}>
-    <span style={styles.roleIcon}>⚙️</span>
-    <span style={styles.roleLabel}>Admin</span>
-  </a>
-  <a href="/signup?role=evaluator" style={{ ...styles.roleCard, borderTop: '3px solid #006064', textDecoration: 'none', cursor: 'pointer' }}>
-    <span style={styles.roleIcon}>📋</span>
-    <span style={styles.roleLabel}>Evaluator</span>
-  </a>
-</div>
+              <a href="/signup?role=student" style={{ ...styles.roleCard, borderTop: '3px solid #2E7D32', textDecoration: 'none', cursor: 'pointer' }}>
+                <span style={styles.roleIcon}>🎓</span>
+                <span style={styles.roleLabel}>Student</span>
+              </a>
+              <a href="/signup?role=workplace_supervisor" style={{ ...styles.roleCard, borderTop: '3px solid #4A148C', textDecoration: 'none', cursor: 'pointer' }}>
+                <span style={styles.roleIcon}>👔</span>
+                <span style={styles.roleLabel}>Supervisor</span>
+              </a>
+              <a href="/signup?role=admin" style={{ ...styles.roleCard, borderTop: '3px solid #E65100', textDecoration: 'none', cursor: 'pointer' }}>
+                <span style={styles.roleIcon}>⚙️</span>
+                <span style={styles.roleLabel}>Admin</span>
+              </a>
+              <a href="/signup?role=evaluator" style={{ ...styles.roleCard, borderTop: '3px solid #006064', textDecoration: 'none', cursor: 'pointer' }}>
+                <span style={styles.roleIcon}>📋</span>
+                <span style={styles.roleLabel}>Evaluator</span>
+              </a>
             </div>
           </div>
         </div>
