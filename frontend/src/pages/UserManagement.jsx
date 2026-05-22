@@ -12,6 +12,8 @@ function UserManagement() {
     password: '',
     role: 'student'
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
 
   useEffect(() => {
     fetchUsers();
@@ -64,7 +66,7 @@ function UserManagement() {
   }
 };
 
-  const getRoleLabel = (role) => {
+ const getRoleLabel = (role) => {
   // If role is empty string or null, treat as admin
   if (!role || role === '') return 'Admin';
   
