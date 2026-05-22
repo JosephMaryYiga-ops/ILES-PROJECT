@@ -53,39 +53,34 @@ function UserManagement() {
     }
   };
 
- const getRoleColor = (role) => {
-  // If role is empty string or null, treat as admin
-  if (!role || role === '') return '#E65100';
-  
-  switch(role) {
-    case 'admin': return '#E65100';
-    case 'student': return '#2E7D32';
-    case 'workplace_supervisor': return '#4A148C';
-    case 'academic_supervisor': return '#006064';
-    default: return '#95a5a6';
-  }
-};
+  const getRoleColor = (role) => {
+    if (!role || role === '') return '#E65100';
+    switch(role) {
+      case 'admin': return '#E65100';
+      case 'student': return '#2E7D32';
+      case 'workplace_supervisor': return '#4A148C';
+      case 'academic_supervisor': return '#006064';
+      default: return '#95a5a6';
+    }
+  };
 
- const getRoleLabel = (role) => {
-  // If role is empty string or null, treat as admin
-  if (!role || role === '') return 'Admin';
-  
-  switch(role) {
-    case 'admin': return 'Admin';
-    case 'student': return 'Student';
-    case 'workplace_supervisor': return 'WP Supervisor';
-    case 'academic_supervisor': return 'AC Supervisor';
-    default: return 'Admin';
-  }
-};
-
+  const getRoleLabel = (role) => {
+    if (!role || role === '') return 'Admin';
+    switch(role) {
+      case 'admin': return 'Admin';
+      case 'student': return 'Student';
+      case 'workplace_supervisor': return 'WP Supervisor';
+      case 'academic_supervisor': return 'AC Supervisor';
+      default: return 'Admin';
+    }
+  };
 
   const filteredUsers = users.filter(user => {
-  const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        user.email.toLowerCase().includes(searchTerm.toLowerCase());
-  const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-  return matchesSearch && matchesRole;
-});
+    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
 
   if (loading) return (
     <div style={styles.page}>
@@ -114,27 +109,6 @@ function UserManagement() {
 
         {/* Add User Form */}
         {showForm && (
-          {/* Search & Filter Bar */}
-<div style={styles.searchBar}>
-  <input
-    type="text"
-    placeholder="🔍 Search by username or email..."
-    style={styles.searchInput}
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
-  <select
-    style={styles.filterSelect}
-    value={roleFilter}
-    onChange={(e) => setRoleFilter(e.target.value)}
-  >
-    <option value="all">All Roles</option>
-    <option value="student">Student</option>
-    <option value="workplace_supervisor">Workplace Supervisor</option>
-    <option value="academic_supervisor">Academic Supervisor</option>
-    <option value="admin">Admin</option>
-  </select>
-</div>
           <div style={styles.formCard}>
             <h3 style={styles.formTitle}>Create New User</h3>
             <form onSubmit={handleCreateUser}>
@@ -179,6 +153,28 @@ function UserManagement() {
           </div>
         )}
 
+        {/* Search & Filter Bar */}
+        <div style={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="🔍 Search by username or email..."
+            style={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            style={styles.filterSelect}
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+          >
+            <option value="all">All Roles</option>
+            <option value="student">Student</option>
+            <option value="workplace_supervisor">Workplace Supervisor</option>
+            <option value="academic_supervisor">Academic Supervisor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
         {/* Stats Cards */}
         <div style={styles.stats}>
           {[
@@ -209,7 +205,7 @@ function UserManagement() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <tr key={user.id} style={styles.tableRow}>
                     <td style={styles.td}>{user.id}</td>
                     <td style={styles.td}>
@@ -275,10 +271,10 @@ const styles = {
   username: { fontWeight: '500' },
   roleBadge: { padding: '4px 12px', borderRadius: '20px', color: '#fff', fontSize: '11px', fontWeight: 'bold', display: 'inline-block' },
   deleteButton: { padding: '6px 12px', backgroundColor: '#e74c3c', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  loading: { textAlign: 'center', padding: '50px', fontSize: '18px', color: '#999' }
+  loading: { textAlign: 'center', padding: '50px', fontSize: '18px', color: '#999' },
   searchBar: { display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' },
-searchInput: { flex: 1, padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px' },
-filterSelect: { padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '180px' },
+  searchInput: { flex: 1, padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px' },
+  filterSelect: { padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '180px' },
 };
 
 export default UserManagement;
