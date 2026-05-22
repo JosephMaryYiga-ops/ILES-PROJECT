@@ -276,6 +276,9 @@ const styles = {
   roleBadge: { padding: '4px 12px', borderRadius: '20px', color: '#fff', fontSize: '11px', fontWeight: 'bold', display: 'inline-block' },
   deleteButton: { padding: '6px 12px', backgroundColor: '#e74c3c', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
   loading: { textAlign: 'center', padding: '50px', fontSize: '18px', color: '#999' }
+  searchBar: { display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' },
+searchInput: { flex: 1, padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px' },
+filterSelect: { padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '180px' },
 };
 
 export default UserManagement;
