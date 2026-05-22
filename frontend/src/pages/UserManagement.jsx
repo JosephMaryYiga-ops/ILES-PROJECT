@@ -79,6 +79,14 @@ function UserManagement() {
   }
 };
 
+
+  const filteredUsers = users.filter(user => {
+  const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        user.email.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+  return matchesSearch && matchesRole;
+});
+
   if (loading) return (
     <div style={styles.page}>
       <Navbar active="users" />
