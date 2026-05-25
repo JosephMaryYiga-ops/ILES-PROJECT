@@ -11,6 +11,7 @@ const navLinks = {
   supervisor: [
     { label: 'Dashboard', path: '/supervisor', key: 'dashboard' },
     { label: 'Review Logs', path: '/supervisor/review', key: 'review' },
+    { label: 'Evaluate Student', path: '/supervisor/evaluate', key: 'evaluate' },
   ],
   admin: [
     { label: 'Dashboard', path: '/admin', key: 'dashboard' },
