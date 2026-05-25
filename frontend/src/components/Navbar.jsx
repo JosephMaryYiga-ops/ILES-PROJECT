@@ -6,6 +6,7 @@ const navLinks = {
     { label: 'Dashboard', path: '/student', key: 'dashboard' },
     { label: 'My Logs', path: '/student/logs', key: 'logs' },
     { label: 'Submit Log', path: '/student/submit', key: 'submit' },
+    { label: 'My Evaluation', path: '/student/evaluation', key: 'evaluation' },
   ],
   supervisor: [
     { label: 'Dashboard', path: '/supervisor', key: 'dashboard' },
