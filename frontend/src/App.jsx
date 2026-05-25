@@ -13,6 +13,7 @@ import UserManagement from "./pages/UserManagement";
 import Signup from "./pages/Signup";
 import EvaluationCriteria from "./pages/EvaluationCriteria";
 import StudentEvaluation from "./pages/StudentEvaluation";
+import SupervisorEvaluation from "./pages/SupervisorEvaluation";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
@@ -96,9 +97,14 @@ function App() {
   </ProtectedRoute>
 } />
 
-<Route path="/student/evaluation" element={
+        <Route path="/student/evaluation" element={
   <ProtectedRoute allowedRoles={['student']}>
     <StudentEvaluation />
+  </ProtectedRoute>
+} />
+        <Route path="/supervisor/evaluation" element={
+  <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
+    <SupervisorEvaluation />
   </ProtectedRoute>
 } />
       </Routes>
