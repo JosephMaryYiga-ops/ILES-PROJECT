@@ -53,6 +53,32 @@ function UserManagement() {
     }
   };
 
+  const handleAssignSupervisor = async (student) => {
+    const supervisorId = prompt('Enter Supervisor User ID:');
+    if (!supervisorId) return;
+    
+    const companyName = prompt('Enter Company Name:');
+    if (!companyName) return;
+    
+    const startDate = prompt('Enter Start Date (YYYY-MM-DD):');
+    const endDate = prompt('Enter End Date (YYYY-MM-DD):');
+    
+    try {
+      await api.post('/placements/', {
+        student: student.id,
+        supervisor_name: `Supervisor ID: ${supervisorId}`,
+        company_name: companyName,
+        start_date: startDate,
+        end_date: endDate
+      });
+      alert(`Student ${student.username} assigned to supervisor ID: ${supervisorId}`);
+      fetchUsers();
+    } catch (error) {
+      alert('Error assigning supervisor. Make sure supervisor ID exists.');
+      console.error(error);
+    }
+  };
+
   const getRoleColor = (role) => {
     if (!role || role === '') return '#E65100';
     switch(role) {
@@ -223,6 +249,14 @@ function UserManagement() {
                       </span>
                     </td>
                     <td style={styles.td}>
+                      {user.role === 'student' && (
+                        <button 
+                          style={styles.assignButton}
+                          onClick={() => handleAssignSupervisor(user)}
+                        >
+                          Assign Supervisor
+                        </button>
+                      )}
                       <button 
                         style={styles.deleteButton} 
                         onClick={() => handleDeleteUser(user.id)}
@@ -270,6 +304,7 @@ const styles = {
   avatar: { width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' },
   username: { fontWeight: '500' },
   roleBadge: { padding: '4px 12px', borderRadius: '20px', color: '#fff', fontSize: '11px', fontWeight: 'bold', display: 'inline-block' },
+  assignButton: { padding: '6px 12px', backgroundColor: '#2196F3', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', marginRight: '8px' },
   deleteButton: { padding: '6px 12px', backgroundColor: '#e74c3c', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
   loading: { textAlign: 'center', padding: '50px', fontSize: '18px', color: '#999' },
   searchBar: { display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' },
