@@ -152,6 +152,7 @@ class WeeklyLogViewSet(viewsets.ModelViewSet):
         if log.status != 'draft':
             return Response({'detail': f"Cannot submit a log with status '{log.status}'."}, status=status.HTTP_400_BAD_REQUEST)
         log.submit()
+        send_log_submitted_notification(log)
         return Response(WeeklyLogSerializer(log).data)
 
     @action(detail=True, methods=['post'])
