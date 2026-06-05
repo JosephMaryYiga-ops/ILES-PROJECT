@@ -52,7 +52,7 @@ INSTALLED_APPS = [
 # corsheaders MUST be first
 # ──────────────────────────────────────────
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',   # FIRST
+   'corsheaders.middleware.CorsMiddleware',   # FIRST
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.AuditMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
