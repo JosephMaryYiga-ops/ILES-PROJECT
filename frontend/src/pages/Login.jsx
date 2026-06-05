@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import toast from 'react-hot-toast';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -26,6 +27,7 @@ function Login() {
       navigate('/admin');
       
     } catch (err) {
+      toast.error('Invalid username or password. Please try again.');
       setError('Invalid username or password. Please try again.');
     } finally {
       setLoading(false);
