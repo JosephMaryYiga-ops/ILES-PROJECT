@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import Navbar from '../components/Navbar';
+import toast from 'react-hot-toast';
 
 function SubmitLog() {
   const navigate = useNavigate();
@@ -41,10 +42,11 @@ function SubmitLog() {
         placement: formData.placement || null,
         status: 'submitted'
       });
-      setSuccess('Weekly log submitted successfully!');
+      toast.success('Weekly log submitted successfully!');
       setFormData({ week_number: '', content: '', placement: '' });
       setTimeout(() => navigate('/student/logs'), 2000);
     } catch (err) {
+      toast.error(err.response?.data?.detail || 'Failed to submit log. Please try again.');
       setError(err.response?.data?.detail || 'Failed to submit log. Please try again.');
     } finally {
       setLoading(false);
