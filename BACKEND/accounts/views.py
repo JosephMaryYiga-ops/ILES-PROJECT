@@ -12,6 +12,7 @@ from .serializers import (
     SupervisorReviewSerializer, EvaluationCriteriaSerializer,
     EvaluationSerializer, NotificationSerializer, AuditLogSerializer
 )
+from .notifications import send_log_submitted_notification, send_review_completed_notification
 
 
 # ──────────────────────────────────────────
