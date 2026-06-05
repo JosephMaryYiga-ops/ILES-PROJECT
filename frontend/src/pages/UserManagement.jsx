@@ -49,8 +49,10 @@ function UserManagement() {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await api.delete(`/users/${userId}/`);
+        toast.success('User deleted successfully');
         fetchUsers();
       } catch (error) {
+        toast.error('Failed to delete user');
         console.error('Error deleting user:', error);
       }
     }
