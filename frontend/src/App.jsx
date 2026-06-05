@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
@@ -21,7 +22,6 @@ function ProtectedRoute({ children, allowedRoles }) {
 
   if (!token) return <Navigate to="/" />;
   
-  // FIX: If role is empty string, treat as 'admin'
   const effectiveRole = (role === '' || !role) ? 'admin' : role;
   
   if (allowedRoles && !allowedRoles.includes(effectiveRole)) return <Navigate to="/" />;
@@ -30,85 +30,87 @@ function ProtectedRoute({ children, allowedRoles }) {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public */}
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Login />} />
+    <>
+      <Toaster position="top-right" />
+      <BrowserRouter>
+        <Routes>
+          {/* Public */}
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<Login />} />
 
-        {/* Student only */}
-        <Route path="/student" element={
-          <ProtectedRoute allowedRoles={['student']}>
-            <StudentDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/student/logs" element={
-          <ProtectedRoute allowedRoles={['student']}>
-            <WeeklyLogs />
-          </ProtectedRoute>
-        } />
-        <Route path="/student/submit" element={
-          <ProtectedRoute allowedRoles={['student']}>
-            <SubmitLog />
-          </ProtectedRoute>
-        } />
+          {/* Student only */}
+          <Route path="/student" element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/logs" element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <WeeklyLogs />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/submit" element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <SubmitLog />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/evaluation" element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <StudentEvaluation />
+            </ProtectedRoute>
+          } />
 
-        {/* Supervisor only */}
-        <Route path="/supervisor" element={
-          <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
-            <SupervisorDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/supervisor/review" element={
-          <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
-            <ReviewLogs />
-          </ProtectedRoute>
-        } />
+          {/* Supervisor only */}
+          <Route path="/supervisor" element={
+            <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
+              <SupervisorDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/supervisor/review" element={
+            <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
+              <ReviewLogs />
+            </ProtectedRoute>
+          } />
+          <Route path="/supervisor/evaluation" element={
+            <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
+              <SupervisorEvaluation />
+            </ProtectedRoute>
+          } />
 
-        {/* Admin only */}
-        <Route path="/admin" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/placement" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <Placement />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/evaluation" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <Evaluation />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/criteria" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <Criteria />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/users" element={
-  <ProtectedRoute allowedRoles={['admin']}>
-    <UserManagement />
-  </ProtectedRoute>
-} />
-        <Route path="/admin/criteria" element={
-  <ProtectedRoute allowedRoles={['admin']}>
-    <EvaluationCriteria />
-  </ProtectedRoute>
-} />
-
-        <Route path="/student/evaluation" element={
-  <ProtectedRoute allowedRoles={['student']}>
-    <StudentEvaluation />
-  </ProtectedRoute>
-} />
-        <Route path="/supervisor/evaluation" element={
-  <ProtectedRoute allowedRoles={['workplace_supervisor', 'academic_supervisor']}>
-    <SupervisorEvaluation />
-  </ProtectedRoute>
-} />
-      </Routes>
-    </BrowserRouter>
+          {/* Admin only */}
+          <Route path="/admin" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/placement" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Placement />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/evaluation" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Evaluation />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/criteria" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Criteria />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UserManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/criteria" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <EvaluationCriteria />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
