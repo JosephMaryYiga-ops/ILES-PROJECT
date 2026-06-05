@@ -197,7 +197,9 @@ class SupervisorReviewViewSet(viewsets.ModelViewSet):
         return SupervisorReview.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(reviewer=self.request.user)
+        review = serializer.save(reviewer=self.request.user)
+        send_review_completed_notification(review)
+  
 
     def get_permissions(self):
         if self.action == 'create':
