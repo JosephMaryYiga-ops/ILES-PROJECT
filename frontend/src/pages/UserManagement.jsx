@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
+import toast from 'react-hot-toast';
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -32,15 +33,17 @@ function UserManagement() {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    try {
-      await api.post('/users/', formData);
-      setShowForm(false);
-      setFormData({ username: '', email: '', password: '', role: 'student' });
-      fetchUsers();
-    } catch (error) {
-      console.error('Error creating user:', error);
-    }
-  };
+      try {
+        await api.post('/users/', formData);
+        toast.success('User created successfully!');
+        setShowForm(false);
+        setFormData({ username: '', email: '', password: '', role: 'student' });
+        fetchUsers();
+      } catch (error) {
+        toast.error('Failed to create user');
+        console.error('Error creating user:', error);
+      }
+    };
 
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
