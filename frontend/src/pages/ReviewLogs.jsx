@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import Navbar from '../components/Navbar';
+import toast from 'react-hot-toast';
 
 function ReviewLogs() {
   const navigate = useNavigate();
@@ -43,14 +44,14 @@ function ReviewLogs() {
         score: parseFloat(reviewData.score)
       });
       
-      setSuccess('Review submitted successfully!');
+      toast.success('Review submitted successfully!');
       setSelectedLog(null);
       setReviewData({ comments: '', score: '' });
       fetchPendingLogs();
       
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to submit review. Please try again.');
+      toast.error(err.response?.data?.detail || 'Failed to submit review. Please try again.');
     } finally {
       setSubmitting(false);
     }
