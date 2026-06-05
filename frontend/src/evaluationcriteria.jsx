@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
+import toast from 'react-hot-toast';
 
 function EvaluationCriteria() {
   const [criteria, setCriteria] = useState([]);
@@ -35,6 +36,7 @@ function EvaluationCriteria() {
       setShowForm(false);
       setFormData({ name: '', description: '', weight: '', evaluator: 'academic' });
       fetchCriteria();
+      toast.success('Criteria created successfully!');
     } catch (error) {
       console.error('Error creating criteria:', error);
     }
@@ -45,6 +47,7 @@ function EvaluationCriteria() {
       try {
         await api.delete(`/criteria/${id}/`);
         fetchCriteria();
+        toast.success('Criteria deleted successfully!');
       } catch (error) {
         console.error('Error deleting criteria:', error);
       }
