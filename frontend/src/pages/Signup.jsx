@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
+import toast from 'react-hot-toast';
 
 
 function Signup() {
@@ -74,9 +75,10 @@ function Signup() {
         password: formData.password,
         role: formData.role
       });
-      alert(`Registration successful! Please login as ${formData.role}.`);
+      toast.success(`Registration successful! Please login as ${formData.role}.`);
       navigate('/');
     } catch (err) {
+      toast.error(err.response?.data?.detail || 'Registration failed. Please try again.');
       setError(err.response?.data?.detail || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
