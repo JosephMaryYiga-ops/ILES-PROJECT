@@ -12,7 +12,7 @@ import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
 import Signup from "./pages/Signup";
-import EvaluationCriteria from "./pages/EvaluationCriteria";
+import EvaluationCriteria from "./EvaluationCriteria";
 import StudentsEvaluation from "./pages/StudentsEvaluation";
 import SupervisorEvaluation from "./pages/SupervisorEvaluation";
 
