@@ -13,7 +13,7 @@ import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
 import Signup from "./pages/Signup";
 import EvaluationCriteria from "./pages/EvaluationCriteria";
-import StudentEvaluation from "./pages/StudentEvaluation";
+import StudentsEvaluation from "./pages/StudentsEvaluation";
 import SupervisorEvaluation from "./pages/SupervisorEvaluation";
 
 function ProtectedRoute({ children, allowedRoles }) {
@@ -56,7 +56,7 @@ function App() {
           } />
           <Route path="/student/evaluation" element={
             <ProtectedRoute allowedRoles={['student']}>
-              <StudentEvaluation />
+              <StudentsEvaluation />
             </ProtectedRoute>
           } />
 
@@ -95,17 +95,12 @@ function App() {
           } />
           <Route path="/admin/criteria" element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <Criteria />
+              <EvaluationCriteria />
             </ProtectedRoute>
           } />
           <Route path="/admin/users" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <UserManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/criteria" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <EvaluationCriteria />
             </ProtectedRoute>
           } />
         </Routes>
