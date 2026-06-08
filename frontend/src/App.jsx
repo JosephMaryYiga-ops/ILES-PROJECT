@@ -13,7 +13,7 @@ import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
 import Signup from "./pages/Signup";
 import EvaluationCriteria from "./EvaluationCriteria";
-import StudentsEvaluation from "./pages/StudentsEvaluation";
+import StudentsEvaluation from "./StudentsEvaluation";
 import SupervisorEvaluation from "./pages/SupervisorEvaluation";
 
 function ProtectedRoute({ children, allowedRoles }) {
