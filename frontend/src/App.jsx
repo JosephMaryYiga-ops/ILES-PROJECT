@@ -12,9 +12,9 @@ import Evaluation from "./pages/Evaluation";
 import Criteria from "./pages/Criteria";
 import UserManagement from "./pages/UserManagement";
 import Signup from "./pages/Signup";
-import EvaluationCriteria from "./EvaluationCriteria";
-import StudentsEvaluation from "./StudentsEvaluation";
-import SupervisorEvaluation from "./pages/SupervisorEvaluation";
+import EvaluationCriteria from "./evaluationcriteria.jsx";
+import StudentsEvaluation from "./studentsevaluation.jsx";
+import SupervisorEvaluation from "./pages/supervisorevaluation.jsx";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access');
