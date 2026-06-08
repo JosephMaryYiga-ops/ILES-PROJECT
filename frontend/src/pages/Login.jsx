@@ -78,6 +78,16 @@ function Login() {
             </button>
           </form>
 
+          {/* Sign Up Link */}
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>
+              Don't have an account?{' '}
+              <a href="/signup" style={{ color: '#E65100', textDecoration: 'none', fontWeight: '600' }}>
+                Sign Up
+              </a>
+            </p>
+          </div>
+
           <div style={styles.roles}>
             <p style={styles.rolesTitle}>Access Levels</p>
             <div style={styles.roleGrid}>
