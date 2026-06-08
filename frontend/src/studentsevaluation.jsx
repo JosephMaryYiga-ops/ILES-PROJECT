@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
-import Navbar from '../components/Navbar';
+import api from './api';
+import Navbar from './components/Navbar';
 
 function StudentEvaluation() {
   const [evaluations, setEvaluations] = useState([]);

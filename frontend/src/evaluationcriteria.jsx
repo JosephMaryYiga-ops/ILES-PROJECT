@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from './src/api';
+import api from './api';
 import Navbar from '../components/Navbar';
 import toast from 'react-hot-toast';
 
