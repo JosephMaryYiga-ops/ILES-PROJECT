@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # ──────────────────────────────────────────
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'iles-project-0511.onrender.com']
 
 # ──────────────────────────────────────────
 # APPLICATIONS
@@ -135,6 +135,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'http://localhost:5174',
     'http://127.0.0.1:5174',
+    'https://iles-frontend.onrender.com',
 ]
 
 # ──────────────────────────────────────────
